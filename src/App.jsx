@@ -48,6 +48,13 @@ const brand = {
   blueEnd: "#0B4EA2",
 };
 
+const surfaces = {
+  darkBackground: "radial-gradient(circle at 20% 20%, #1b3f82 0%, #101c36 35%, #070d1a 100%)",
+  darkShell: "linear-gradient(135deg, rgba(24,45,94,0.65) 0%, rgba(11,22,45,0.92) 55%, rgba(7,13,26,0.96) 100%)",
+  lightBackground: "linear-gradient(180deg, #eff3ff 0%, #f9fbff 100%)",
+  lightShell: "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(230,239,255,0.9) 65%, rgba(220,232,255,0.9) 100%)",
+};
+
 // ------- i18n -------
 const i18n = {
   en: {
@@ -178,18 +185,90 @@ const LANGS = Object.keys(i18n);
 
 // ------- Catalog & Actions -------
 const CATS = [
-  { title: "Request Support", icon: LifeBuoy, accent: "from-blue-500/25 to-blue-500/0" },
-  { title: "User Management", icon: Users, accent: "from-sky-500/25 to-sky-500/0" },
-  { title: "COTS Software", icon: Boxes, accent: "from-indigo-500/25 to-indigo-500/0" },
-  { title: "Purchase", icon: ShoppingCart, accent: "from-teal-500/25 to-teal-500/0" },
-  { title: "File System", icon: HardDrive, accent: "from-blue-400/25 to-blue-400/0" },
-  { title: "Printer", icon: Printer, accent: "from-cyan-500/25 to-cyan-500/0" },
-  { title: "Network", icon: NetworkIcon, accent: "from-emerald-500/25 to-emerald-500/0" },
-  { title: "Exchange Online", icon: Mail, accent: "from-fuchsia-500/25 to-fuchsia-500/0" },
-  { title: "Group Management", icon: UserPlus, accent: "from-purple-500/25 to-purple-500/0" },
-  { title: "KanBo", icon: KanbanSquare, accent: "from-pink-500/25 to-pink-500/0" },
-  { title: "Hardware", icon: Monitor, accent: "from-violet-500/25 to-violet-500/0" },
-  { title: "Mobile Device", icon: Smartphone, accent: "from-indigo-400/25 to-indigo-400/0" },
+  {
+    title: "Request Support",
+    icon: LifeBuoy,
+    accent: "from-blue-500/25 to-blue-500/0",
+    lightAccent: "from-[#e5edff] via-white to-white",
+    lightIcon: "bg-[#dbe7ff] text-[#1f4ed8]",
+  },
+  {
+    title: "User Management",
+    icon: Users,
+    accent: "from-sky-500/25 to-sky-500/0",
+    lightAccent: "from-[#e9f4ff] via-white to-white",
+    lightIcon: "bg-[#d9ecff] text-[#0f6bc8]",
+  },
+  {
+    title: "COTS Software",
+    icon: Boxes,
+    accent: "from-indigo-500/25 to-indigo-500/0",
+    lightAccent: "from-[#efe9ff] via-white to-white",
+    lightIcon: "bg-[#e0d7ff] text-[#5b21b6]",
+  },
+  {
+    title: "Purchase",
+    icon: ShoppingCart,
+    accent: "from-teal-500/25 to-teal-500/0",
+    lightAccent: "from-[#e6fffa] via-white to-white",
+    lightIcon: "bg-[#cef8ef] text-[#0f766e]",
+  },
+  {
+    title: "File System",
+    icon: HardDrive,
+    accent: "from-blue-400/25 to-blue-400/0",
+    lightAccent: "from-[#e8f3ff] via-white to-white",
+    lightIcon: "bg-[#d4e8ff] text-[#1d4ed8]",
+  },
+  {
+    title: "Printer",
+    icon: Printer,
+    accent: "from-cyan-500/25 to-cyan-500/0",
+    lightAccent: "from-[#e6fbff] via-white to-white",
+    lightIcon: "bg-[#caf4ff] text-[#0f9bd1]",
+  },
+  {
+    title: "Network",
+    icon: NetworkIcon,
+    accent: "from-emerald-500/25 to-emerald-500/0",
+    lightAccent: "from-[#e6fff6] via-white to-white",
+    lightIcon: "bg-[#c8f5e7] text-[#047857]",
+  },
+  {
+    title: "Exchange Online",
+    icon: Mail,
+    accent: "from-fuchsia-500/25 to-fuchsia-500/0",
+    lightAccent: "from-[#f8e9ff] via-white to-white",
+    lightIcon: "bg-[#f0d5ff] text-[#a21caf]",
+  },
+  {
+    title: "Group Management",
+    icon: UserPlus,
+    accent: "from-purple-500/25 to-purple-500/0",
+    lightAccent: "from-[#f1e9ff] via-white to-white",
+    lightIcon: "bg-[#e3d6ff] text-[#6b21a8]",
+  },
+  {
+    title: "KanBo",
+    icon: KanbanSquare,
+    accent: "from-pink-500/25 to-pink-500/0",
+    lightAccent: "from-[#ffe9f5] via-white to-white",
+    lightIcon: "bg-[#ffd4eb] text-[#be185d]",
+  },
+  {
+    title: "Hardware",
+    icon: Monitor,
+    accent: "from-violet-500/25 to-violet-500/0",
+    lightAccent: "from-[#efe9ff] via-white to-white",
+    lightIcon: "bg-[#ded5ff] text-[#4c1d95]",
+  },
+  {
+    title: "Mobile Device",
+    icon: Smartphone,
+    accent: "from-indigo-400/25 to-indigo-400/0",
+    lightAccent: "from-[#e7edff] via-white to-white",
+    lightIcon: "bg-[#d8e1ff] text-[#3730a3]",
+  },
 ];
 
 const ACTIONS = {
@@ -340,7 +419,17 @@ function SidebarItem({ label, icon: Icon, active = false, onClick }) {
   );
 }
 
-function CategoryCard({ title, description, icon: Icon, accent, onClick, labels, dark }) {
+function CategoryCard({
+  title,
+  description,
+  icon: Icon,
+  accent,
+  lightAccent,
+  lightIcon,
+  onClick,
+  labels,
+  dark,
+}) {
   return (
     <motion.button onClick={onClick} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="text-left">
       <Card className={cx(
@@ -361,7 +450,7 @@ function CategoryCard({ title, description, icon: Icon, accent, onClick, labels,
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="relative z-10 pt-0">
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Badge
               variant="secondary"
@@ -623,21 +712,92 @@ export default function HelpdeskPortal() {
     setFormFields(fields);
     setFormOpen(true);
   };
-  const afterSubmit = () => {
-    setTimeout(() => {
-      setFormOpen(false);
-      setSelected(null);
-      setTab("home");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 1200);
-  };
+    const afterSubmit = () => {
+      setTimeout(() => {
+        setFormOpen(false);
+        setSelected(null);
+        setTab("home");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 1200);
+    };
 
-  const t = (key) => i18n[lang][key];
+    const t = (key) => i18n[lang][key];
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const cats = CATS.map((c) => ({
-      ...c,
+    const quickActions = [
+      {
+        title: i18n[lang].quick.myTickets,
+        icon: Ticket,
+        onClick: () => setTab("tickets"),
+        accent: "from-[#e5edff] via-white to-white",
+        iconClass: "bg-[#dbe7ff] text-[#1f4ed8]",
+      },
+      {
+        title: i18n[lang].quick.catalog,
+        icon: Boxes,
+        onClick: () => {},
+        accent: "from-[#e9f7ff] via-white to-white",
+        iconClass: "bg-[#d1f0ff] text-[#0284c7]",
+      },
+      {
+        title: i18n[lang].quick.kb,
+        icon: BookOpen,
+        onClick: () => setTab("knowledge"),
+        accent: "from-[#f1e9ff] via-white to-white",
+        iconClass: "bg-[#e3d6ff] text-[#6b21a8]",
+      },
+      {
+        title: i18n[lang].quick.forms,
+        icon: FileText,
+        onClick: () => openForm(i18n[lang].quick.forms),
+        accent: "from-[#ffe9f2] via-white to-white",
+        iconClass: "bg-[#ffd6e6] text-[#c0265b]",
+      },
+      {
+        title: i18n[lang].quick.contacts,
+        icon: Users,
+        onClick: () => setTab("users"),
+        accent: "from-[#fff1e6] via-white to-white",
+        iconClass: "bg-[#ffe3cc] text-[#c2410c]",
+      },
+      {
+        title: i18n[lang].quick.status,
+        icon: AlertTriangle,
+        onClick: () => setTab("systems"),
+        accent: "from-[#fff4e6] via-white to-white",
+        iconClass: "bg-[#ffe8cc] text-[#b45309]",
+      },
+    ];
+
+    const searchInputClasses = cx(
+      "w-full rounded-xl border pl-9 text-sm transition focus-visible:outline-none focus-visible:ring-2",
+      isDark
+        ? "border-white/20 bg-white/10 text-white placeholder:text-white/70 focus-visible:ring-white"
+        : "border-slate-200 bg-white text-slate-900 placeholder:text-slate-500 focus-visible:border-blue-500 focus-visible:ring-blue-500",
+    );
+
+    const searchIconClass = cx(
+      "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2",
+      isDark ? "text-white/80" : "text-slate-400",
+    );
+
+    const searchButtonClasses = cx(
+      "rounded-xl px-5",
+      isDark
+        ? "bg-white text-slate-900 hover:bg-white/90"
+        : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
+    );
+
+    const utilityButtonClasses = cx(
+      "rounded-xl px-4",
+      isDark
+        ? "bg-white text-slate-900 hover:bg-white/90"
+        : "bg-slate-100 text-slate-900 hover:bg-slate-200",
+    );
+
+    const filtered = useMemo(() => {
+      const q = query.trim().toLowerCase();
+      const cats = CATS.map((c) => ({
+        ...c,
       description: (i18n[lang].categories?.[c.title]?.d ?? ""),
     }));
     if (!q) return cats;
@@ -724,13 +884,29 @@ export default function HelpdeskPortal() {
             {/* resize handle */}
             <div onMouseDown={() => setIsResizing(true)} title="Drag to resize" className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize bg-white/10 hover:bg-white/20" />
             <div className="mt-auto p-4">
-              <Card className="border-white/20 bg-white/10 text-white backdrop-blur">
+              <Card
+                className={cx(
+                  "rounded-2xl border",
+                  isDark
+                    ? "border-white/20 bg-white/10 text-white backdrop-blur"
+                    : "border-sky-100 bg-gradient-to-br from-[#e5edff] via-white to-white text-slate-900 shadow-sm",
+                )}
+              >
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{t("needHelp")}</CardTitle>
-                  <CardDescription className="text-white/80">Open a high-priority ticket and we'll get right on it.</CardDescription>
+                  <CardDescription className={cx(isDark ? "text-white/80" : "text-slate-600")}>
+                    Open a high-priority ticket and we'll get right on it.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="secondary" className="w-full" onClick={() => openForm(i18n[lang].urgent)}>
+                  <Button
+                    variant="secondary"
+                    className={cx(
+                      "w-full rounded-xl",
+                      isDark ? "bg-white text-slate-900 hover:bg-white/90" : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
+                    )}
+                    onClick={() => openForm(i18n[lang].urgent)}
+                  >
                     <AlertTriangle className="mr-2 h-4 w-4" /> {t("urgent")}
                   </Button>
                 </CardContent>
@@ -741,22 +917,28 @@ export default function HelpdeskPortal() {
           {/* Main */}
           <main className="flex min-h-full flex-col flex-1">
             {/* Topbar */}
-            <div className="relative w-full border-b" style={{ background: `linear-gradient(90deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)` }}>
-              <div className="flex w-full items-center justify-between gap-2 px-4 py-5 text-white">
+            <div
+              className={cx(
+                "relative w-full border-b",
+                isDark ? "border-white/10" : "border-transparent bg-white/90 shadow-sm backdrop-blur",
+              )}
+              style={isDark ? { background: `linear-gradient(90deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)` } : undefined}
+            >
+              <div className={cx("flex w-full items-center justify-between gap-2 px-4 py-5", isDark ? "text-white" : "text-slate-900")}>
                 <div className="hidden text-left md:block">
                   <div className="text-sm font-semibold tracking-wide">{t("welcome")}</div>
                   <div className="text-xs opacity-80">{t("subWelcome")}</div>
                 </div>
                 <div className="flex w-full max-w-3xl items-center gap-2 md:ml-auto">
                   <div className="relative w-full">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/80" />
-                    <Input className="w-full rounded-xl border-white/20 bg-white/10 pl-9 text-white placeholder:text-white/70 focus-visible:ring-white" placeholder={t("searchPh")} value={query} onChange={(e) => setQuery(e.target.value)} />
+                    <Search className={searchIconClass} />
+                    <Input className={searchInputClasses} placeholder={t("searchPh")} value={query} onChange={(e) => setQuery(e.target.value)} />
                   </div>
-                  <Button variant="secondary" className="rounded-xl bg-white text-slate-900 hover:bg-white/90">{lang === 'de' ? 'Suchen' : 'Search'}</Button>
-                  <Button variant="secondary" className="rounded-xl bg-white text-slate-900 hover:bg-white/90" onClick={() => setLang(lang === 'en' ? 'de' : 'en')} title={lang === 'en' ? 'Switch to German' : 'Wechsel zu Englisch'}>
+                  <Button variant="secondary" className={searchButtonClasses}>{lang === 'de' ? 'Suchen' : 'Search'}</Button>
+                  <Button variant="secondary" className={utilityButtonClasses} onClick={() => setLang(lang === 'en' ? 'de' : 'en')} title={lang === 'en' ? 'Switch to German' : 'Wechsel zu Englisch'}>
                     <Globe className="mr-2 h-4 w-4" /> {lang.toUpperCase()}
                   </Button>
-                  <Button variant="secondary" className="rounded-xl bg-white text-slate-900 hover:bg-white/90" onClick={() => setIsDark(v => !v)} title="Toggle theme">
+                  <Button variant="secondary" className={utilityButtonClasses} onClick={() => setIsDark(v => !v)} title="Toggle theme">
                     {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -812,6 +994,8 @@ export default function HelpdeskPortal() {
                         description={i18n[lang].categories?.[c.title]?.d}
                         icon={c.icon}
                         accent={c.accent}
+                        lightAccent={c.lightAccent}
+                        lightIcon={c.lightIcon}
                         onClick={() => setSelected(c.title)}
                         labels={i18n[lang].chips}
                         dark={isDark}
@@ -833,6 +1017,8 @@ export default function HelpdeskPortal() {
                       description={i18n[lang].categories?.[selectedCat.title]?.d}
                       icon={selectedCat.icon}
                       accent={selectedCat.accent}
+                      lightAccent={selectedCat.lightAccent}
+                      lightIcon={selectedCat.lightIcon}
                       onClick={() => {}}
                       labels={i18n[lang].chips}
                       dark={isDark}
