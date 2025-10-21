@@ -172,9 +172,9 @@ const i18n = {
       redirect: "Weiterleitung zum Dashboard...",
     },
   },
-} as const;
+};
 
-type Lang = keyof typeof i18n;
+const LANGS = Object.keys(i18n);
 
 // ------- Catalog & Actions -------
 const CATS = [
@@ -192,7 +192,7 @@ const CATS = [
   { title: "Mobile Device", icon: Smartphone, accent: "from-indigo-400/25 to-indigo-400/0" },
 ];
 
-const ACTIONS: Record<string, { label: string; description?: string }[]> = {
+const ACTIONS = {
   "File System": [
     { label: "Shares", description: "Request a new share or change access" },
     { label: "Permissions", description: "Grant/Remove user or group rights" },
@@ -219,18 +219,9 @@ const ACTIONS: Record<string, { label: string; description?: string }[]> = {
 };
 
 // ------- Dynamic Form Schemas (per action) -------
-type Field = {
-  name: string;
-  label: string;
-  type: "text" | "email" | "textarea" | "select" | "date" | "datetime" | "number" | "toggle";
-  required?: boolean;
-  options?: string[];
-  placeholder?: string;
-};
+const schemaKey = (category, action) => `${category} - ${action}`;
 
-const schemaKey = (category: string, action: string) => `${category} - ${action}`;
-
-const FORM_SCHEMAS: Record<string, Field[]> = {
+const FORM_SCHEMAS = {
   // User Management
   [schemaKey("User Management", "New User")]: [
     { name: "firstName", label: "First name", type: "text", required: true },
@@ -324,7 +315,7 @@ const FORM_SCHEMAS: Record<string, Field[]> = {
 };
 
 // ------- util + nav -------
-const cx = (...classes: (string | false | null | undefined)[]) => classes.filter(Boolean).join(" ");
+const cx = (...classes) => classes.filter(Boolean).join(" ");
 
 const NAV_ITEMS = [
   { key: "home", label: "Home", icon: Home },
@@ -335,11 +326,9 @@ const NAV_ITEMS = [
   { key: "users", label: "Users", icon: Users },
   { key: "security", label: "Security", icon: ShieldCheck },
   { key: "settings", label: "Settings", icon: SettingsIcon },
-] as const;
+];
 
-type TabKey = typeof NAV_ITEMS[number]["key"];
-
-function SidebarItem({ label, icon: Icon, active = false, onClick }: { label: string; icon: any; active?: boolean; onClick?: () => void }) {
+function SidebarItem({ label, icon: Icon, active = false, onClick }) {
   return (
     <button onClick={onClick} className={cx(
       "group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition hover:bg-white/10 hover:text-white",
@@ -351,7 +340,7 @@ function SidebarItem({ label, icon: Icon, active = false, onClick }: { label: st
   );
 }
 
-function CategoryCard({ title, description, icon: Icon, accent, onClick, labels, dark }: any) {
+function CategoryCard({ title, description, icon: Icon, accent, onClick, labels, dark }) {
   return (
     <motion.button onClick={onClick} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="text-left">
       <Card className={cx(
@@ -382,7 +371,7 @@ function CategoryCard({ title, description, icon: Icon, accent, onClick, labels,
   );
 }
 
-function ActionCard({ label, description, dark, onOpen }: { label: string; description?: string; dark?: boolean; onOpen: () => void }) {
+function ActionCard({ label, description, dark, onOpen }) {
   return (
     <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
       <Card className={cx("rounded-2xl border shadow-sm", dark ? "bg-[#121826] border-[#1f2a44] hover:shadow-lg" : "bg-white border-slate-200/60 hover:shadow-md")}> 
@@ -399,27 +388,11 @@ function ActionCard({ label, description, dark, onOpen }: { label: string; descr
 }
 
 // ------- Simple Modal with Form -------
-function FormModal({
-  open,
-  onClose,
-  onSubmit,
-  title,
-  lang,
-  dark,
-  fields,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (data: any) => void;
-  title: string;
-  lang: Lang;
-  dark: boolean;
-  fields?: Field[];
-}) {
+function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
   const t = i18n[lang].form;
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
-  const [values, setValues] = useState<any>({});
+  const [values, setValues] = useState({});
 
   useEffect(() => {
     if (!open) {
@@ -431,16 +404,16 @@ function FormModal({
 
   if (!open) return null;
 
-  const defaultFields: Field[] = [
+  const defaultFields = [
     { name: "name", label: i18n[lang].form.name, type: "text", required: true },
     { name: "email", label: i18n[lang].form.email, type: "email", required: true },
     { name: "summary", label: i18n[lang].form.summary, type: "text", required: true },
     { name: "details", label: i18n[lang].form.details, type: "textarea", required: true },
     { name: "priority", label: i18n[lang].form.priority, type: "select", options: [i18n[lang].form.low, i18n[lang].form.normal, i18n[lang].form.high], required: true },
   ];
-  const usedFields = fields && fields.length ? fields : defaultFields;
+  const usedFields = Array.isArray(fields) && fields.length ? fields : defaultFields;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setSending(true);
     setTimeout(() => {
@@ -468,14 +441,14 @@ function FormModal({
                       required={!!f.required}
                       rows={5}
                       value={values[f.name] ?? ""}
-                      onChange={(e) => setValues((v: any) => ({ ...v, [f.name]: e.target.value }))}
+                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
                       className={cx("w-full rounded-md border px-3 py-2", dark ? "bg-[#0f172a] border-[#1f2a44] text-slate-100" : "bg-white border-slate-300")}
                     />
                   ) : f.type === "select" ? (
                     <select
                       required={!!f.required}
                       value={values[f.name] ?? (f.options?.[0] ?? "")}
-                      onChange={(e) => setValues((v: any) => ({ ...v, [f.name]: e.target.value }))}
+                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
                       className={cx("w-full rounded-md border px-3 py-2", dark ? "bg-[#0f172a] border-[#1f2a44] text-slate-100" : "bg-white border-slate-300")}
                     >
                       {(f.options || []).map((o) => (
@@ -484,7 +457,11 @@ function FormModal({
                     </select>
                   ) : f.type === "toggle" ? (
                     <div className="flex items-center gap-2">
-                      <input type="checkbox" checked={!!values[f.name]} onChange={(e) => setValues((v: any) => ({ ...v, [f.name]: e.target.checked }))} />
+                      <input
+                        type="checkbox"
+                        checked={!!values[f.name]}
+                        onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.checked }))}
+                      />
                       <span className="text-sm opacity-80">{values[f.name] ? "Yes" : "No"}</span>
                     </div>
                   ) : (
@@ -492,7 +469,7 @@ function FormModal({
                       type={f.type === "datetime" ? "datetime-local" : f.type}
                       required={!!f.required}
                       value={values[f.name] ?? ""}
-                      onChange={(e) => setValues((v: any) => ({ ...v, [f.name]: e.target.value }))}
+                      onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
                       className={cx(dark && "bg-[#0f172a] border-[#1f2a44] text-slate-100")}
                     />
                   )}
@@ -517,21 +494,53 @@ function FormModal({
 }
 
 export default function HelpdeskPortal() {
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<string | null>(null);
-  const [lang, setLang] = useState<Lang>(() => (localStorage.getItem("portal-lang") as Lang) || "en");
-  const [isDark, setIsDark] = useState(() => localStorage.getItem("portal-theme") === "dark");
-  const [tab, setTab] = useState<TabKey>(() => (localStorage.getItem("portal-tab") as TabKey) || "home");
+  const readStorage = (key) => {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      console.warn("Unable to read from localStorage", error);
+      return null;
+    }
+  };
 
-  useEffect(() => { localStorage.setItem("portal-theme", isDark ? "dark" : "light"); }, [isDark]);
-  useEffect(() => { localStorage.setItem("portal-lang", lang); }, [lang]);
-  useEffect(() => { localStorage.setItem("portal-tab", tab); }, [tab]);
+  const writeStorage = (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.warn("Unable to write to localStorage", error);
+    }
+  };
+
+  const getStoredLang = () => {
+    const stored = readStorage("portal-lang");
+    return stored && LANGS.includes(stored) ? stored : "en";
+  };
+
+  const getStoredTab = () => {
+    const stored = readStorage("portal-tab");
+    const keys = NAV_ITEMS.map((item) => item.key);
+    return stored && keys.includes(stored) ? stored : "home";
+  };
+
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [lang, setLang] = useState(getStoredLang);
+  const [isDark, setIsDark] = useState(() => readStorage("portal-theme") === "dark");
+  const [tab, setTab] = useState(getStoredTab);
+
+  useEffect(() => { writeStorage("portal-theme", isDark ? "dark" : "light"); }, [isDark]);
+  useEffect(() => { writeStorage("portal-lang", lang); }, [lang]);
+  useEffect(() => { writeStorage("portal-tab", tab); }, [tab]);
 
   // Form state
   const [formOpen, setFormOpen] = useState(false);
   const [formTitle, setFormTitle] = useState("");
-  const [formFields, setFormFields] = useState<Field[] | undefined>(undefined);
-  const openForm = (title: string, fields?: Field[]) => { setFormTitle(title); setFormFields(fields); setFormOpen(true); };
+  const [formFields, setFormFields] = useState(undefined);
+  const openForm = (title, fields) => {
+    setFormTitle(title);
+    setFormFields(fields);
+    setFormOpen(true);
+  };
   const afterSubmit = () => {
     setTimeout(() => {
       setFormOpen(false);
@@ -541,11 +550,14 @@ export default function HelpdeskPortal() {
     }, 1200);
   };
 
-  const t = (key: keyof typeof i18n["en"]) => (i18n[lang] as any)[key];
+  const t = (key) => i18n[lang][key];
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const cats = CATS.map((c) => ({ ...c, description: i18n[lang].categories[c.title as keyof typeof i18n["en"]["categories"]]?.d || "" }));
+    const cats = CATS.map((c) => ({
+      ...c,
+      description: (i18n[lang].categories?.[c.title]?.d ?? ""),
+    }));
     if (!q) return cats;
     return cats.filter((c) => [c.title, c.description].join(" ").toLowerCase().includes(q));
   }, [query, lang]);
@@ -554,21 +566,27 @@ export default function HelpdeskPortal() {
   const selectedActions = selected ? ACTIONS[selected] ?? [] : [];
 
   // resizable sidebar
-  const [sidebarWidth, setSidebarWidth] = useState<number>(() => {
-    const v = Number(localStorage.getItem("portal-sidebar-width"));
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    const stored = readStorage("portal-sidebar-width");
+    const v = Number(stored);
     return Number.isFinite(v) && v >= 220 && v <= 500 ? v : 300;
   });
   const [isResizing, setIsResizing] = useState(false);
   useEffect(() => {
-    const onMove = (e: MouseEvent) => { if (!isResizing) return; const x = Math.max(220, Math.min(500, e.clientX)); setSidebarWidth(x); };
-    const onUp = () => { if (isResizing) { setIsResizing(false); try { localStorage.setItem("portal-sidebar-width", String(sidebarWidth)); } catch {} } };
+    const onMove = (e) => { if (!isResizing) return; const x = Math.max(220, Math.min(500, e.clientX)); setSidebarWidth(x); };
+    const onUp = () => {
+      if (isResizing) {
+        setIsResizing(false);
+        writeStorage("portal-sidebar-width", String(sidebarWidth));
+      }
+    };
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
     return () => { document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); };
   }, [isResizing, sidebarWidth]);
 
   // quick runtime checks ("tests")
-  if (process.env.NODE_ENV !== "production") {
+  if (import.meta.env.DEV) {
     console.assert(Array.isArray(CATS) && CATS.length > 0, "CATS should be a non-empty array");
     console.assert(!!i18n.en && !!i18n.de, "i18n should have en and de");
     // verify schemas exist for declared actions
@@ -683,7 +701,16 @@ export default function HelpdeskPortal() {
                 {tab === 'home' && !selected && (
                   <motion.div key="grid" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {filtered.map((c) => (
-                      <CategoryCard key={c.title} title={c.title} description={i18n[lang].categories[c.title as keyof typeof i18n['en']['categories']]?.d} icon={c.icon} accent={c.accent} onClick={() => setSelected(c.title)} labels={i18n[lang].chips} dark={isDark} />
+                      <CategoryCard
+                        key={c.title}
+                        title={c.title}
+                        description={i18n[lang].categories?.[c.title]?.d}
+                        icon={c.icon}
+                        accent={c.accent}
+                        onClick={() => setSelected(c.title)}
+                        labels={i18n[lang].chips}
+                        dark={isDark}
+                      />
                     ))}
                   </motion.div>
                 )}
@@ -696,7 +723,15 @@ export default function HelpdeskPortal() {
                       </Button>
                     </div>
 
-                    <CategoryCard title={selectedCat.title} description={i18n[lang].categories[selectedCat.title as keyof typeof i18n['en']['categories']]?.d} icon={selectedCat.icon} accent={selectedCat.accent} onClick={() => {}} labels={i18n[lang].chips} dark={isDark} />
+                    <CategoryCard
+                      title={selectedCat.title}
+                      description={i18n[lang].categories?.[selectedCat.title]?.d}
+                      icon={selectedCat.icon}
+                      accent={selectedCat.accent}
+                      onClick={() => {}}
+                      labels={i18n[lang].chips}
+                      dark={isDark}
+                    />
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                       {selectedActions.length > 0 ? (
