@@ -436,29 +436,17 @@ function CategoryCard({
         "relative overflow-hidden rounded-2xl border shadow-sm transition",
         dark
           ? "bg-[#15294b] border-[#223763] hover:border-[#4c6ce8] hover:shadow-xl"
-          : "bg-white border-transparent shadow-sm hover:shadow-lg"
+          : "bg-white border-slate-200/60 hover:shadow-md"
       )}>
-        <div
-          className={cx(
-            "pointer-events-none absolute inset-0 rounded-2xl",
-            dark
-              ? cx("bg-gradient-to-b", accent, "opacity-20")
-              : cx("bg-gradient-to-br", lightAccent ?? "from-white to-white")
-          )}
-        />
-        <CardHeader className="relative z-10 pb-2">
+        <div className={cx("pointer-events-none absolute inset-0 bg-gradient-to-b", accent, dark && "opacity-10")} />
+        <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
-            <div
-              className={cx(
-                "grid h-10 w-10 place-items-center rounded-xl",
-                dark ? "bg-white/10 text-sky-100" : lightIcon ?? "bg-slate-100 text-slate-700"
-              )}
-            >
-              <Icon className="h-5 w-5" />
+            <div className={cx("grid h-10 w-10 place-items-center rounded-xl", dark ? "bg-white/10" : "bg-slate-100")}>
+              <Icon className={cx("h-5 w-5", dark ? "text-sky-200" : "text-slate-700")} />
             </div>
             <div>
               <CardTitle className={cx("text-base", dark && "text-slate-100")}>{title}</CardTitle>
-              <CardDescription className={cx("text-xs", dark ? "text-slate-200" : "text-slate-600")}>{description}</CardDescription>
+              <CardDescription className={cx("text-xs", dark ? "text-slate-200" : "text-slate-500")}>{description}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -466,28 +454,19 @@ function CategoryCard({
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Badge
               variant="secondary"
-              className={cx(
-                "rounded-full",
-                dark ? "bg-[#1f3766] text-slate-100" : "bg-white/80 text-slate-700"
-              )}
+              className={cx("rounded-full", dark && "bg-[#1f3766] text-slate-100")}
             >
               {labels?.request ?? 'Request'}
             </Badge>
             <Badge
               variant="outline"
-              className={cx(
-                "rounded-full",
-                dark ? "border-[#3459c8] bg-white/5 text-slate-100" : "border-transparent bg-white/70 text-slate-600"
-              )}
+              className={cx("rounded-full", dark && "border-[#3459c8] bg-white/5 text-slate-100")}
             >
               {labels?.howto ?? 'How-to'}
             </Badge>
             <Badge
               variant="outline"
-              className={cx(
-                "rounded-full",
-                dark ? "border-[#3459c8] bg-white/5 text-slate-100" : "border-transparent bg-white/70 text-slate-600"
-              )}
+              className={cx("rounded-full", dark && "border-[#3459c8] bg-white/5 text-slate-100")}
             >
               {labels?.troubleshoot ?? 'Troubleshoot'}
             </Badge>
@@ -502,12 +481,12 @@ function ActionCard({ label, description, dark, onOpen }) {
   return (
     <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
       <Card
-          className={cx(
-            "rounded-2xl border shadow-sm transition",
-            dark
-              ? "bg-[#15294b] border-[#223763] hover:border-[#4c6ce8] hover:shadow-xl"
-              : "bg-gradient-to-br from-slate-50 via-white to-white border-transparent hover:shadow-lg",
-          )}
+        className={cx(
+          "rounded-2xl border shadow-sm transition",
+          dark
+            ? "bg-[#15294b] border-[#223763] hover:border-[#4c6ce8] hover:shadow-xl"
+            : "bg-white border-slate-200/60 hover:shadow-md",
+        )}
       >
         <CardHeader className="pb-2">
           <CardTitle className={cx("text-sm", dark && "text-slate-100")}>{label}</CardTitle>
@@ -519,12 +498,10 @@ function ActionCard({ label, description, dark, onOpen }) {
           <Button
             size="sm"
             variant="secondary"
-              className={cx(
-                "rounded-full",
-                dark
-                  ? "bg-[#3b82f6] text-white hover:bg-[#5aa0ff]"
-                  : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
-              )}
+            className={cx(
+              "rounded-full",
+              dark && "bg-[#3b82f6] text-white hover:bg-[#5aa0ff]",
+            )}
             onClick={onOpen}
           >
             Open
@@ -863,19 +840,23 @@ export default function HelpdeskPortal() {
     });
   }
 
-    return (
+  return (
+    <div
+      className={cx(
+        "min-h-screen w-full flex flex-col transition-colors duration-300",
+        isDark ? "text-slate-100" : "bg-slate-100 text-slate-900",
+      )}
+      style={isDark ? { background: "radial-gradient(circle at 20% 20%, #1b3f82 0%, #101c36 35%, #070d1a 100%)" } : undefined}
+    >
+      {/* Shell */}
       <div
-        className={cx(
-          "min-h-screen w-full flex flex-col transition-colors duration-300",
-          isDark ? "text-slate-100" : "text-slate-900",
-        )}
-        style={{ background: isDark ? surfaces.darkBackground : surfaces.lightBackground }}
+        className="w-full flex flex-1"
+        style={
+          isDark
+            ? { background: "linear-gradient(135deg, rgba(24,45,94,0.65) 0%, rgba(11,22,45,0.92) 55%, rgba(7,13,26,0.96) 100%)" }
+            : undefined
+        }
       >
-        {/* Shell */}
-        <div
-          className="w-full flex flex-1"
-          style={{ background: isDark ? surfaces.darkShell : surfaces.lightShell }}
-        >
         <div className="min-h-full w-full md:flex">
           {/* Sidebar */}
           <aside className="relative hidden md:flex md:min-h-full flex-col gap-2" style={{ background: `linear-gradient(180deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)`, width: sidebarWidth }}>
@@ -966,33 +947,33 @@ export default function HelpdeskPortal() {
 
             {/* Content */}
             <div className="w-full flex-1 px-4 py-6">
-                {tab === 'home' && !selected && (
-                  <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {quickActions.map((s) => (
-                      <Button
-                        key={s.title}
-                        variant="outline"
-                        className={cx(
-                          "group h-auto justify-start gap-3 rounded-2xl border py-4 text-left shadow-sm transition",
-                          isDark
-                            ? "bg-[#162447] border-[#273d74] text-slate-100 hover:bg-[#1c2f59] hover:border-[#3b82f6]"
-                            : cx("bg-gradient-to-br", s.accent, "border-transparent text-slate-900 hover:shadow-md"),
-                        )}
-                        onClick={s.onClick}
-                      >
-                        <div
-                          className={cx(
-                            "grid h-10 w-10 place-items-center rounded-xl transition",
-                            isDark ? "bg-white/10 text-white" : cx(s.iconClass, "shadow-sm"),
-                          )}
-                        >
-                          <s.icon className="h-4 w-4" />
-                        </div>
-                        <span className="text-sm font-medium">{s.title}</span>
-                      </Button>
-                    ))}
-                  </div>
-                )}
+              {tab === 'home' && !selected && (
+                <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {[
+                    { title: i18n[lang].quick.myTickets, icon: Ticket, onClick: () => setTab('tickets') },
+                    { title: i18n[lang].quick.catalog, icon: Boxes, onClick: () => {} },
+                    { title: i18n[lang].quick.kb, icon: BookOpen, onClick: () => setTab('knowledge') },
+                    { title: i18n[lang].quick.forms, icon: FileText, onClick: () => openForm(i18n[lang].quick.forms) },
+                    { title: i18n[lang].quick.contacts, icon: Users, onClick: () => setTab('users') },
+                    { title: i18n[lang].quick.status, icon: AlertTriangle, onClick: () => setTab('systems') },
+                  ].map((s) => (
+                    <Button
+                      key={s.title}
+                      variant="outline"
+                      className={cx(
+                        "h-auto justify-start gap-3 rounded-2xl border py-3 text-left shadow-sm transition hover:bg-slate-50",
+                        isDark
+                          ? "bg-[#162447] border-[#273d74] text-slate-100 hover:bg-[#1c2f59] hover:border-[#3b82f6]"
+                          : "bg-white border-slate-200 text-slate-900",
+                      )}
+                      onClick={s.onClick}
+                    >
+                      <s.icon className="h-4 w-4" />
+                      <span className="text-sm font-medium">{s.title}</span>
+                    </Button>
+                  ))}
+                </div>
+              )}
 
               <div className="mb-3 flex items-end justify-between">
                 {tab === 'home' && !selected && (
