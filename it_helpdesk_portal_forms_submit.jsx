@@ -299,7 +299,7 @@ const FORM_SCHEMAS: Record<string, Field[]> = {
     { name: "source", label: "Source", type: "text", required: true },
     { name: "destination", label: "Destination", type: "text", required: true },
     { name: "port", label: "Port", type: "text", required: true },
-    { name: "protocol", label: "Protocol", type: "select`, options: ["TCP", "UDP", "ICMP"] },
+    { name: "protocol", label: "Protocol", type: "select", options: ["TCP", "UDP", "ICMP"] },
     { name: "reason", label: "Reason", type: "textarea" },
   ],
   [schemaKey("Network", "New Network Port")]: [
