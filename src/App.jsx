@@ -48,6 +48,13 @@ const brand = {
   blueEnd: "#0B4EA2",
 };
 
+const surfaces = {
+  darkBackground: "radial-gradient(circle at 20% 20%, #1b3f82 0%, #101c36 35%, #070d1a 100%)",
+  darkShell: "linear-gradient(135deg, rgba(24,45,94,0.65) 0%, rgba(11,22,45,0.92) 55%, rgba(7,13,26,0.96) 100%)",
+  lightBackground: "linear-gradient(180deg, #eff3ff 0%, #f9fbff 100%)",
+  lightShell: "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(230,239,255,0.9) 65%, rgba(220,232,255,0.9) 100%)",
+};
+
 // ------- i18n -------
 const i18n = {
   en: {
@@ -178,18 +185,90 @@ const LANGS = Object.keys(i18n);
 
 // ------- Catalog & Actions -------
 const CATS = [
-  { title: "Request Support", icon: LifeBuoy, accent: "from-blue-500/25 to-blue-500/0" },
-  { title: "User Management", icon: Users, accent: "from-sky-500/25 to-sky-500/0" },
-  { title: "COTS Software", icon: Boxes, accent: "from-indigo-500/25 to-indigo-500/0" },
-  { title: "Purchase", icon: ShoppingCart, accent: "from-teal-500/25 to-teal-500/0" },
-  { title: "File System", icon: HardDrive, accent: "from-blue-400/25 to-blue-400/0" },
-  { title: "Printer", icon: Printer, accent: "from-cyan-500/25 to-cyan-500/0" },
-  { title: "Network", icon: NetworkIcon, accent: "from-emerald-500/25 to-emerald-500/0" },
-  { title: "Exchange Online", icon: Mail, accent: "from-fuchsia-500/25 to-fuchsia-500/0" },
-  { title: "Group Management", icon: UserPlus, accent: "from-purple-500/25 to-purple-500/0" },
-  { title: "KanBo", icon: KanbanSquare, accent: "from-pink-500/25 to-pink-500/0" },
-  { title: "Hardware", icon: Monitor, accent: "from-violet-500/25 to-violet-500/0" },
-  { title: "Mobile Device", icon: Smartphone, accent: "from-indigo-400/25 to-indigo-400/0" },
+  {
+    title: "Request Support",
+    icon: LifeBuoy,
+    accent: "from-blue-500/25 to-blue-500/0",
+    lightAccent: "from-[#e5edff] via-white to-white",
+    lightIcon: "bg-[#dbe7ff] text-[#1f4ed8]",
+  },
+  {
+    title: "User Management",
+    icon: Users,
+    accent: "from-sky-500/25 to-sky-500/0",
+    lightAccent: "from-[#e9f4ff] via-white to-white",
+    lightIcon: "bg-[#d9ecff] text-[#0f6bc8]",
+  },
+  {
+    title: "COTS Software",
+    icon: Boxes,
+    accent: "from-indigo-500/25 to-indigo-500/0",
+    lightAccent: "from-[#efe9ff] via-white to-white",
+    lightIcon: "bg-[#e0d7ff] text-[#5b21b6]",
+  },
+  {
+    title: "Purchase",
+    icon: ShoppingCart,
+    accent: "from-teal-500/25 to-teal-500/0",
+    lightAccent: "from-[#e6fffa] via-white to-white",
+    lightIcon: "bg-[#cef8ef] text-[#0f766e]",
+  },
+  {
+    title: "File System",
+    icon: HardDrive,
+    accent: "from-blue-400/25 to-blue-400/0",
+    lightAccent: "from-[#e8f3ff] via-white to-white",
+    lightIcon: "bg-[#d4e8ff] text-[#1d4ed8]",
+  },
+  {
+    title: "Printer",
+    icon: Printer,
+    accent: "from-cyan-500/25 to-cyan-500/0",
+    lightAccent: "from-[#e6fbff] via-white to-white",
+    lightIcon: "bg-[#caf4ff] text-[#0f9bd1]",
+  },
+  {
+    title: "Network",
+    icon: NetworkIcon,
+    accent: "from-emerald-500/25 to-emerald-500/0",
+    lightAccent: "from-[#e6fff6] via-white to-white",
+    lightIcon: "bg-[#c8f5e7] text-[#047857]",
+  },
+  {
+    title: "Exchange Online",
+    icon: Mail,
+    accent: "from-fuchsia-500/25 to-fuchsia-500/0",
+    lightAccent: "from-[#f8e9ff] via-white to-white",
+    lightIcon: "bg-[#f0d5ff] text-[#a21caf]",
+  },
+  {
+    title: "Group Management",
+    icon: UserPlus,
+    accent: "from-purple-500/25 to-purple-500/0",
+    lightAccent: "from-[#f1e9ff] via-white to-white",
+    lightIcon: "bg-[#e3d6ff] text-[#6b21a8]",
+  },
+  {
+    title: "KanBo",
+    icon: KanbanSquare,
+    accent: "from-pink-500/25 to-pink-500/0",
+    lightAccent: "from-[#ffe9f5] via-white to-white",
+    lightIcon: "bg-[#ffd4eb] text-[#be185d]",
+  },
+  {
+    title: "Hardware",
+    icon: Monitor,
+    accent: "from-violet-500/25 to-violet-500/0",
+    lightAccent: "from-[#efe9ff] via-white to-white",
+    lightIcon: "bg-[#ded5ff] text-[#4c1d95]",
+  },
+  {
+    title: "Mobile Device",
+    icon: Smartphone,
+    accent: "from-indigo-400/25 to-indigo-400/0",
+    lightAccent: "from-[#e7edff] via-white to-white",
+    lightIcon: "bg-[#d8e1ff] text-[#3730a3]",
+  },
 ];
 
 const ACTIONS = {
@@ -340,30 +419,78 @@ function SidebarItem({ label, icon: Icon, active = false, onClick }) {
   );
 }
 
-function CategoryCard({ title, description, icon: Icon, accent, onClick, labels, dark }) {
+function CategoryCard({
+  title,
+  description,
+  icon: Icon,
+  accent,
+  lightAccent,
+  lightIcon,
+  onClick,
+  labels,
+  dark,
+}) {
   return (
     <motion.button onClick={onClick} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="text-left">
       <Card className={cx(
         "relative overflow-hidden rounded-2xl border shadow-sm transition",
-        dark ? "bg-[#121826] border-[#1f2a44] hover:shadow-lg" : "bg-white border-slate-200/60 hover:shadow-md"
+        dark
+          ? "bg-[#15294b] border-[#223763] hover:border-[#4c6ce8] hover:shadow-xl"
+          : "bg-white border-transparent shadow-sm hover:shadow-lg"
       )}>
-        <div className={cx("pointer-events-none absolute inset-0 bg-gradient-to-b", accent, dark && "opacity-5")} />
-        <CardHeader className="pb-2">
+        <div
+          className={cx(
+            "pointer-events-none absolute inset-0 rounded-2xl",
+            dark
+              ? cx("bg-gradient-to-b", accent, "opacity-20")
+              : cx("bg-gradient-to-br", lightAccent ?? "from-white to-white")
+          )}
+        />
+        <CardHeader className="relative z-10 pb-2">
           <div className="flex items-center gap-3">
-            <div className={cx("grid h-10 w-10 place-items-center rounded-xl", dark ? "bg-[#0f172a]" : "bg-slate-100")}> 
-              <Icon className={cx("h-5 w-5", dark && "text-slate-200")} />
+            <div
+              className={cx(
+                "grid h-10 w-10 place-items-center rounded-xl",
+                dark ? "bg-white/10 text-sky-100" : lightIcon ?? "bg-slate-100 text-slate-700"
+              )}
+            >
+              <Icon className="h-5 w-5" />
             </div>
             <div>
               <CardTitle className={cx("text-base", dark && "text-slate-100")}>{title}</CardTitle>
-              <CardDescription className={cx("text-xs", dark ? "text-slate-300" : "text-slate-500")}>{description}</CardDescription>
+              <CardDescription className={cx("text-xs", dark ? "text-slate-200" : "text-slate-600")}>{description}</CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="relative z-10 pt-0">
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className={cx("rounded-full", dark && "bg-slate-700 text-slate-100")}>{labels?.request ?? 'Request'}</Badge>
-            <Badge variant="outline" className={cx("rounded-full", dark && "border-slate-600 text-slate-200")}>{labels?.howto ?? 'How-to'}</Badge>
-            <Badge variant="outline" className={cx("rounded-full", dark && "border-slate-600 text-slate-200")}>{labels?.troubleshoot ?? 'Troubleshoot'}</Badge>
+            <Badge
+              variant="secondary"
+              className={cx(
+                "rounded-full",
+                dark ? "bg-[#1f3766] text-slate-100" : "bg-white/80 text-slate-700"
+              )}
+            >
+              {labels?.request ?? 'Request'}
+            </Badge>
+            <Badge
+              variant="outline"
+              className={cx(
+                "rounded-full",
+                dark ? "border-[#3459c8] bg-white/5 text-slate-100" : "border-transparent bg-white/70 text-slate-600"
+              )}
+            >
+              {labels?.howto ?? 'How-to'}
+            </Badge>
+            <Badge
+              variant="outline"
+              className={cx(
+                "rounded-full",
+                dark ? "border-[#3459c8] bg-white/5 text-slate-100" : "border-transparent bg-white/70 text-slate-600"
+              )}
+            >
+              {labels?.troubleshoot ?? 'Troubleshoot'}
+            </Badge>
           </div>
         </CardContent>
       </Card>
@@ -374,13 +501,34 @@ function CategoryCard({ title, description, icon: Icon, accent, onClick, labels,
 function ActionCard({ label, description, dark, onOpen }) {
   return (
     <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
-      <Card className={cx("rounded-2xl border shadow-sm", dark ? "bg-[#121826] border-[#1f2a44] hover:shadow-lg" : "bg-white border-slate-200/60 hover:shadow-md")}> 
+      <Card
+          className={cx(
+            "rounded-2xl border shadow-sm transition",
+            dark
+              ? "bg-[#15294b] border-[#223763] hover:border-[#4c6ce8] hover:shadow-xl"
+              : "bg-gradient-to-br from-slate-50 via-white to-white border-transparent hover:shadow-lg",
+          )}
+      >
         <CardHeader className="pb-2">
           <CardTitle className={cx("text-sm", dark && "text-slate-100")}>{label}</CardTitle>
-          {description && <CardDescription className={cx("text-xs", dark ? "text-slate-300" : "text-slate-500")}>{description}</CardDescription>}
+          {description && (
+            <CardDescription className={cx("text-xs", dark ? "text-slate-200" : "text-slate-500")}>{description}</CardDescription>
+          )}
         </CardHeader>
         <CardContent className="pt-0">
-          <Button size="sm" variant="secondary" className={cx("rounded-full", dark && "bg-white text-slate-900 hover:bg-white/90")} onClick={onOpen}>Open</Button>
+          <Button
+            size="sm"
+            variant="secondary"
+              className={cx(
+                "rounded-full",
+                dark
+                  ? "bg-[#3b82f6] text-white hover:bg-[#5aa0ff]"
+                  : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
+              )}
+            onClick={onOpen}
+          >
+            Open
+          </Button>
         </CardContent>
       </Card>
     </motion.div>
@@ -441,11 +589,21 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true">
-      <div className={cx("w-full max-w-xl rounded-2xl shadow-xl", dark ? "bg-[#121826] border border-[#1f2a44] text-slate-100" : "bg-white")}> 
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+      <div
+        className={cx(
+          "w-full max-w-xl rounded-2xl shadow-xl",
+          dark ? "border border-[#223763] bg-[#101f3f] text-slate-100" : "bg-white",
+        )}
+      >
         <div className="flex items-center justify-between px-5 pt-5">
           <h3 className="text-lg font-semibold">{title}</h3>
-          <button onClick={onClose} className="rounded p-1 hover:bg-slate-200/40"><X className="h-5 w-5"/></button>
+          <button
+            onClick={onClose}
+            className={cx("rounded p-1", dark ? "hover:bg-white/10" : "hover:bg-slate-200/40")}
+          >
+            <X className="h-5 w-5"/>
+          </button>
         </div>
         <div className="px-5 pb-5">
           {!done ? (
@@ -459,14 +617,24 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                       rows={5}
                       value={values[f.name] ?? f.defaultValue ?? ""}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                      className={cx("w-full rounded-md border px-3 py-2", dark ? "bg-[#0f172a] border-[#1f2a44] text-slate-100" : "bg-white border-slate-300")}
+                      className={cx(
+                        "w-full rounded-md border px-3 py-2 focus-visible:outline-none focus-visible:ring-1",
+                        dark
+                          ? "bg-[#111f3c] border-[#2a4173] text-slate-100 focus-visible:border-[#4c6ce8] focus-visible:ring-[#4c6ce8]"
+                          : "bg-white border-slate-300 focus-visible:border-blue-500 focus-visible:ring-blue-500",
+                      )}
                     />
                   ) : f.type === "select" ? (
                     <select
                       required={!!f.required}
                       value={values[f.name] ?? f.defaultValue ?? (f.options?.[0] ?? "")}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                      className={cx("w-full rounded-md border px-3 py-2", dark ? "bg-[#0f172a] border-[#1f2a44] text-slate-100" : "bg-white border-slate-300")}
+                      className={cx(
+                        "w-full rounded-md border px-3 py-2 focus-visible:outline-none focus-visible:ring-1",
+                        dark
+                          ? "bg-[#111f3c] border-[#2a4173] text-slate-100 focus-visible:border-[#4c6ce8] focus-visible:ring-[#4c6ce8]"
+                          : "bg-white border-slate-300 focus-visible:border-blue-500 focus-visible:ring-blue-500",
+                      )}
                     >
                       {(f.options || []).map((o) => (
                         <option key={o} value={o}>{o}</option>
@@ -487,13 +655,22 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                       required={!!f.required}
                       value={values[f.name] ?? f.defaultValue ?? ""}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                      className={cx(dark && "bg-[#0f172a] border-[#1f2a44] text-slate-100")}
+                      className={cx(
+                        dark && "border-[#2a4173] bg-[#111f3c] text-slate-100 placeholder:text-slate-400 focus-visible:border-[#4c6ce8] focus-visible:ring-[#4c6ce8]",
+                      )}
                     />
                   )}
                 </div>
               ))}
               <div className="flex items-center justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={onClose} className={cx(dark && "border-[#1f2a44] text-slate-100")}>{i18n[lang].form.cancel}</Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                  className={cx(dark && "border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]")}
+                >
+                  {i18n[lang].form.cancel}
+                </Button>
                 <Button type="submit" disabled={sending}>{sending ? "..." : i18n[lang].form.submit}</Button>
               </div>
             </form>
@@ -558,21 +735,92 @@ export default function HelpdeskPortal() {
     setFormFields(fields);
     setFormOpen(true);
   };
-  const afterSubmit = () => {
-    setTimeout(() => {
-      setFormOpen(false);
-      setSelected(null);
-      setTab("home");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 1200);
-  };
+    const afterSubmit = () => {
+      setTimeout(() => {
+        setFormOpen(false);
+        setSelected(null);
+        setTab("home");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 1200);
+    };
 
-  const t = (key) => i18n[lang][key];
+    const t = (key) => i18n[lang][key];
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const cats = CATS.map((c) => ({
-      ...c,
+    const quickActions = [
+      {
+        title: i18n[lang].quick.myTickets,
+        icon: Ticket,
+        onClick: () => setTab("tickets"),
+        accent: "from-[#e5edff] via-white to-white",
+        iconClass: "bg-[#dbe7ff] text-[#1f4ed8]",
+      },
+      {
+        title: i18n[lang].quick.catalog,
+        icon: Boxes,
+        onClick: () => {},
+        accent: "from-[#e9f7ff] via-white to-white",
+        iconClass: "bg-[#d1f0ff] text-[#0284c7]",
+      },
+      {
+        title: i18n[lang].quick.kb,
+        icon: BookOpen,
+        onClick: () => setTab("knowledge"),
+        accent: "from-[#f1e9ff] via-white to-white",
+        iconClass: "bg-[#e3d6ff] text-[#6b21a8]",
+      },
+      {
+        title: i18n[lang].quick.forms,
+        icon: FileText,
+        onClick: () => openForm(i18n[lang].quick.forms),
+        accent: "from-[#ffe9f2] via-white to-white",
+        iconClass: "bg-[#ffd6e6] text-[#c0265b]",
+      },
+      {
+        title: i18n[lang].quick.contacts,
+        icon: Users,
+        onClick: () => setTab("users"),
+        accent: "from-[#fff1e6] via-white to-white",
+        iconClass: "bg-[#ffe3cc] text-[#c2410c]",
+      },
+      {
+        title: i18n[lang].quick.status,
+        icon: AlertTriangle,
+        onClick: () => setTab("systems"),
+        accent: "from-[#fff4e6] via-white to-white",
+        iconClass: "bg-[#ffe8cc] text-[#b45309]",
+      },
+    ];
+
+    const searchInputClasses = cx(
+      "w-full rounded-xl border pl-9 text-sm transition focus-visible:outline-none focus-visible:ring-2",
+      isDark
+        ? "border-white/20 bg-white/10 text-white placeholder:text-white/70 focus-visible:ring-white"
+        : "border-slate-200 bg-white text-slate-900 placeholder:text-slate-500 focus-visible:border-blue-500 focus-visible:ring-blue-500",
+    );
+
+    const searchIconClass = cx(
+      "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2",
+      isDark ? "text-white/80" : "text-slate-400",
+    );
+
+    const searchButtonClasses = cx(
+      "rounded-xl px-5",
+      isDark
+        ? "bg-white text-slate-900 hover:bg-white/90"
+        : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
+    );
+
+    const utilityButtonClasses = cx(
+      "rounded-xl px-4",
+      isDark
+        ? "bg-white text-slate-900 hover:bg-white/90"
+        : "bg-slate-100 text-slate-900 hover:bg-slate-200",
+    );
+
+    const filtered = useMemo(() => {
+      const q = query.trim().toLowerCase();
+      const cats = CATS.map((c) => ({
+        ...c,
       description: (i18n[lang].categories?.[c.title]?.d ?? ""),
     }));
     if (!q) return cats;
@@ -615,10 +863,19 @@ export default function HelpdeskPortal() {
     });
   }
 
-  return (
-    <div className={cx("min-h-screen w-full flex flex-col", isDark ? "bg-[#0b1220] text-slate-100" : "bg-slate-100 text-slate-900")}> 
-      {/* Shell */}
-      <div className={cx("w-full flex flex-1", isDark ? "bg-[#0d1526]" : "bg-slate-50")}> 
+    return (
+      <div
+        className={cx(
+          "min-h-screen w-full flex flex-col transition-colors duration-300",
+          isDark ? "text-slate-100" : "text-slate-900",
+        )}
+        style={{ background: isDark ? surfaces.darkBackground : surfaces.lightBackground }}
+      >
+        {/* Shell */}
+        <div
+          className="w-full flex flex-1"
+          style={{ background: isDark ? surfaces.darkShell : surfaces.lightShell }}
+        >
         <div className="min-h-full w-full md:flex">
           {/* Sidebar */}
           <aside className="relative hidden md:flex md:min-h-full flex-col gap-2" style={{ background: `linear-gradient(180deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)`, width: sidebarWidth }}>
@@ -646,13 +903,29 @@ export default function HelpdeskPortal() {
             {/* resize handle */}
             <div onMouseDown={() => setIsResizing(true)} title="Drag to resize" className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize bg-white/10 hover:bg-white/20" />
             <div className="mt-auto p-4">
-              <Card className="border-white/20 bg-white/10 text-white backdrop-blur">
+              <Card
+                className={cx(
+                  "rounded-2xl border",
+                  isDark
+                    ? "border-white/20 bg-white/10 text-white backdrop-blur"
+                    : "border-sky-100 bg-gradient-to-br from-[#e5edff] via-white to-white text-slate-900 shadow-sm",
+                )}
+              >
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{t("needHelp")}</CardTitle>
-                  <CardDescription className="text-white/80">Open a high-priority ticket and we'll get right on it.</CardDescription>
+                  <CardDescription className={cx(isDark ? "text-white/80" : "text-slate-600")}>
+                    Open a high-priority ticket and we'll get right on it.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="secondary" className="w-full" onClick={() => openForm(i18n[lang].urgent)}>
+                  <Button
+                    variant="secondary"
+                    className={cx(
+                      "w-full rounded-xl",
+                      isDark ? "bg-white text-slate-900 hover:bg-white/90" : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
+                    )}
+                    onClick={() => openForm(i18n[lang].urgent)}
+                  >
                     <AlertTriangle className="mr-2 h-4 w-4" /> {t("urgent")}
                   </Button>
                 </CardContent>
@@ -663,22 +936,28 @@ export default function HelpdeskPortal() {
           {/* Main */}
           <main className="flex min-h-full flex-col flex-1">
             {/* Topbar */}
-            <div className="relative w-full border-b" style={{ background: `linear-gradient(90deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)` }}>
-              <div className="flex w-full items-center justify-between gap-2 px-4 py-5 text-white">
+            <div
+              className={cx(
+                "relative w-full border-b",
+                isDark ? "border-white/10" : "border-transparent bg-white/90 shadow-sm backdrop-blur",
+              )}
+              style={isDark ? { background: `linear-gradient(90deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)` } : undefined}
+            >
+              <div className={cx("flex w-full items-center justify-between gap-2 px-4 py-5", isDark ? "text-white" : "text-slate-900")}>
                 <div className="hidden text-left md:block">
                   <div className="text-sm font-semibold tracking-wide">{t("welcome")}</div>
                   <div className="text-xs opacity-80">{t("subWelcome")}</div>
                 </div>
                 <div className="flex w-full max-w-3xl items-center gap-2 md:ml-auto">
                   <div className="relative w-full">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/80" />
-                    <Input className="w-full rounded-xl border-white/20 bg-white/10 pl-9 text-white placeholder:text-white/70 focus-visible:ring-white" placeholder={t("searchPh")} value={query} onChange={(e) => setQuery(e.target.value)} />
+                    <Search className={searchIconClass} />
+                    <Input className={searchInputClasses} placeholder={t("searchPh")} value={query} onChange={(e) => setQuery(e.target.value)} />
                   </div>
-                  <Button variant="secondary" className="rounded-xl bg-white text-slate-900 hover:bg-white/90">{lang === 'de' ? 'Suchen' : 'Search'}</Button>
-                  <Button variant="secondary" className="rounded-xl bg-white text-slate-900 hover:bg-white/90" onClick={() => setLang(lang === 'en' ? 'de' : 'en')} title={lang === 'en' ? 'Switch to German' : 'Wechsel zu Englisch'}>
+                  <Button variant="secondary" className={searchButtonClasses}>{lang === 'de' ? 'Suchen' : 'Search'}</Button>
+                  <Button variant="secondary" className={utilityButtonClasses} onClick={() => setLang(lang === 'en' ? 'de' : 'en')} title={lang === 'en' ? 'Switch to German' : 'Wechsel zu Englisch'}>
                     <Globe className="mr-2 h-4 w-4" /> {lang.toUpperCase()}
                   </Button>
-                  <Button variant="secondary" className="rounded-xl bg-white text-slate-900 hover:bg-white/90" onClick={() => setIsDark(v => !v)} title="Toggle theme">
+                  <Button variant="secondary" className={utilityButtonClasses} onClick={() => setIsDark(v => !v)} title="Toggle theme">
                     {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -687,23 +966,33 @@ export default function HelpdeskPortal() {
 
             {/* Content */}
             <div className="w-full flex-1 px-4 py-6">
-              {tab === 'home' && !selected && (
-                <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    { title: i18n[lang].quick.myTickets, icon: Ticket, onClick: () => setTab('tickets') },
-                    { title: i18n[lang].quick.catalog, icon: Boxes, onClick: () => {} },
-                    { title: i18n[lang].quick.kb, icon: BookOpen, onClick: () => setTab('knowledge') },
-                    { title: i18n[lang].quick.forms, icon: FileText, onClick: () => openForm(i18n[lang].quick.forms) },
-                    { title: i18n[lang].quick.contacts, icon: Users, onClick: () => setTab('users') },
-                    { title: i18n[lang].quick.status, icon: AlertTriangle, onClick: () => setTab('systems') },
-                  ].map((s) => (
-                    <Button key={s.title} variant="outline" className={cx("h-auto justify-start gap-3 rounded-2xl border py-3 text-left shadow-sm hover:bg-slate-50", isDark ? "bg-[#121826] border-[#1f2a44] text-slate-100 hover:bg-[#162036]" : "bg-white border-slate-200 text-slate-900")} onClick={s.onClick}> 
-                      <s.icon className="h-4 w-4" />
-                      <span className="text-sm font-medium">{s.title}</span>
-                    </Button>
-                  ))}
-                </div>
-              )}
+                {tab === 'home' && !selected && (
+                  <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {quickActions.map((s) => (
+                      <Button
+                        key={s.title}
+                        variant="outline"
+                        className={cx(
+                          "group h-auto justify-start gap-3 rounded-2xl border py-4 text-left shadow-sm transition",
+                          isDark
+                            ? "bg-[#162447] border-[#273d74] text-slate-100 hover:bg-[#1c2f59] hover:border-[#3b82f6]"
+                            : cx("bg-gradient-to-br", s.accent, "border-transparent text-slate-900 hover:shadow-md"),
+                        )}
+                        onClick={s.onClick}
+                      >
+                        <div
+                          className={cx(
+                            "grid h-10 w-10 place-items-center rounded-xl transition",
+                            isDark ? "bg-white/10 text-white" : cx(s.iconClass, "shadow-sm"),
+                          )}
+                        >
+                          <s.icon className="h-4 w-4" />
+                        </div>
+                        <span className="text-sm font-medium">{s.title}</span>
+                      </Button>
+                    ))}
+                  </div>
+                )}
 
               <div className="mb-3 flex items-end justify-between">
                 {tab === 'home' && !selected && (
@@ -724,6 +1013,8 @@ export default function HelpdeskPortal() {
                         description={i18n[lang].categories?.[c.title]?.d}
                         icon={c.icon}
                         accent={c.accent}
+                        lightAccent={c.lightAccent}
+                        lightIcon={c.lightIcon}
                         onClick={() => setSelected(c.title)}
                         labels={i18n[lang].chips}
                         dark={isDark}
@@ -745,6 +1036,8 @@ export default function HelpdeskPortal() {
                       description={i18n[lang].categories?.[selectedCat.title]?.d}
                       icon={selectedCat.icon}
                       accent={selectedCat.accent}
+                      lightAccent={selectedCat.lightAccent}
+                      lightIcon={selectedCat.lightIcon}
                       onClick={() => {}}
                       labels={i18n[lang].chips}
                       dark={isDark}
@@ -766,7 +1059,7 @@ export default function HelpdeskPortal() {
                           />
                         ))
                       ) : (
-                        <Card className={cx("border-dashed", isDark ? "bg-[#121826] border-[#1f2a44]" : "")}> 
+                        <Card className={cx("border-dashed", isDark ? "bg-[#15294b] border-[#223763]" : "")}>
                           <CardHeader>
                             <CardTitle className="text-base">{t("noActions")}</CardTitle>
                             <CardDescription>{t("tellUs")}</CardDescription>
@@ -788,13 +1081,26 @@ export default function HelpdeskPortal() {
                     </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {['INC-1021','SR-559','INC-1017','SR-553'].map((id,i)=> (
-                        <Card key={id} className={cx('rounded-2xl border', isDark ? 'bg-[#121826] border-[#1f2a44]' : 'bg-white border-slate-200')}>
+                        <Card
+                          key={id}
+                          className={cx(
+                            'rounded-2xl border transition',
+                            isDark ? 'bg-[#15294b] border-[#223763] hover:border-[#4c6ce8]' : 'bg-white border-slate-200',
+                          )}
+                        >
                           <CardHeader className="pb-2">
                             <CardTitle className="text-sm">{id} - {(i%2?'In Progress':'New')}</CardTitle>
                             <CardDescription>{['VPN not connecting','New monitor request','Printer offline','Add user to group'][i]}</CardDescription>
                           </CardHeader>
                           <CardContent className="pt-0">
-                            <Button size="sm" variant="outline" onClick={() => openForm(`Update ${id}`)}>Update</Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                              onClick={() => openForm(`Update ${id}`)}
+                            >
+                              Update
+                            </Button>
                           </CardContent>
                         </Card>
                       ))}
@@ -810,14 +1116,34 @@ export default function HelpdeskPortal() {
                     </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {['alex.meyer','li.na','sam.otto','maria.fernandez'].map((u)=> (
-                        <Card key={u} className={cx('rounded-2xl border', isDark ? 'bg-[#121826] border-[#1f2a44]' : 'bg-white border-slate-200')}>
+                        <Card
+                          key={u}
+                          className={cx(
+                            'rounded-2xl border transition',
+                            isDark ? 'bg-[#15294b] border-[#223763] hover:border-[#4c6ce8]' : 'bg-white border-slate-200',
+                          )}
+                        >
                           <CardHeader className="pb-2">
                             <CardTitle className="text-sm">{u}</CardTitle>
                             <CardDescription>Employee</CardDescription>
                           </CardHeader>
                           <CardContent className="flex gap-2 pt-0">
-                            <Button size="sm" variant="outline" onClick={() => openForm(schemaKey('User Management','Reset Password'), FORM_SCHEMAS[schemaKey('User Management','Reset Password')])}>{lang==='de'?'Passwort zurücksetzen':'Reset Password'}</Button>
-                            <Button size="sm" variant="outline" onClick={() => openForm(schemaKey('User Management','Add to Group'), FORM_SCHEMAS[schemaKey('User Management','Add to Group')])}>{lang==='de'?'Zu Gruppe hinzufügen':'Add to Group'}</Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                              onClick={() => openForm(schemaKey('User Management','Reset Password'), FORM_SCHEMAS[schemaKey('User Management','Reset Password')])}
+                            >
+                              {lang==='de'?'Passwort zurücksetzen':'Reset Password'}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                              onClick={() => openForm(schemaKey('User Management','Add to Group'), FORM_SCHEMAS[schemaKey('User Management','Add to Group')])}
+                            >
+                              {lang==='de'?'Zu Gruppe hinzufügen':'Add to Group'}
+                            </Button>
                           </CardContent>
                         </Card>
                       ))}
@@ -828,12 +1154,35 @@ export default function HelpdeskPortal() {
                 {tab === 'settings' && (
                   <motion.div key="settings" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
                     <h2 className="text-xl font-semibold">Settings</h2>
-                    <Card className={cx('rounded-2xl border', isDark ? 'bg-[#121826] border-[#1f2a44]' : 'bg-white border-slate-200')}>
+                    <Card
+                      className={cx(
+                        'rounded-2xl border transition',
+                        isDark ? 'bg-[#15294b] border-[#223763] hover:border-[#4c6ce8]' : 'bg-white border-slate-200',
+                      )}
+                    >
                       <CardHeader className="pb-2"><CardTitle className="text-sm">Preferences</CardTitle></CardHeader>
                       <CardContent className="flex flex-wrap items-center gap-2 pt-0">
-                        <Button variant="outline" onClick={() => setLang(lang==='en'?'de':'en')}>{lang==='en'?'Switch to German':'Wechsel zu Englisch'}</Button>
-                        <Button variant="outline" onClick={() => setIsDark(v=>!v)}>{isDark?'Light Mode':'Dark Mode'}</Button>
-                        <Button variant="outline" onClick={() => { localStorage.removeItem('portal-sidebar-width'); window.location.reload(); }}>Reset Sidebar Width</Button>
+                        <Button
+                          variant="outline"
+                          className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                          onClick={() => setLang(lang==='en'?'de':'en')}
+                        >
+                          {lang==='en'?'Switch to German':'Wechsel zu Englisch'}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                          onClick={() => setIsDark(v=>!v)}
+                        >
+                          {isDark?'Light Mode':'Dark Mode'}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                          onClick={() => { localStorage.removeItem('portal-sidebar-width'); window.location.reload(); }}
+                        >
+                          Reset Sidebar Width
+                        </Button>
                       </CardContent>
                     </Card>
                   </motion.div>
