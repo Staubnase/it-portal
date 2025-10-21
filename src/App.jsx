@@ -389,29 +389,46 @@ function ActionCard({ label, description, dark, onOpen }) {
 
 // ------- Simple Modal with Form -------
 function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
-  const t = i18n[lang].form;
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [values, setValues] = useState({});
+
+  const defaultFields = useMemo(() => ([
+    { name: "name", label: i18n[lang].form.name, type: "text", required: true },
+    { name: "email", label: i18n[lang].form.email, type: "email", required: true },
+    { name: "summary", label: i18n[lang].form.summary, type: "text", required: true },
+    { name: "details", label: i18n[lang].form.details, type: "textarea", required: true },
+    { name: "priority", label: i18n[lang].form.priority, type: "select", options: [i18n[lang].form.low, i18n[lang].form.normal, i18n[lang].form.high], required: true, defaultValue: i18n[lang].form.normal },
+  ]), [lang]);
+
+  const usedFields = useMemo(
+    () => (Array.isArray(fields) && fields.length ? fields : defaultFields),
+    [fields, defaultFields],
+  );
 
   useEffect(() => {
     if (!open) {
       setSending(false);
       setDone(false);
       setValues({});
+      return;
     }
-  }, [open]);
+
+    const initialValues = usedFields.reduce((acc, field) => {
+      if (!field?.name) return acc;
+      const fallback = field.type === "select"
+        ? field.options?.[0] ?? ""
+        : field.type === "toggle"
+          ? false
+          : "";
+      acc[field.name] = field.defaultValue ?? fallback;
+      return acc;
+    }, {});
+
+    setValues(initialValues);
+  }, [open, usedFields]);
 
   if (!open) return null;
-
-  const defaultFields = [
-    { name: "name", label: i18n[lang].form.name, type: "text", required: true },
-    { name: "email", label: i18n[lang].form.email, type: "email", required: true },
-    { name: "summary", label: i18n[lang].form.summary, type: "text", required: true },
-    { name: "details", label: i18n[lang].form.details, type: "textarea", required: true },
-    { name: "priority", label: i18n[lang].form.priority, type: "select", options: [i18n[lang].form.low, i18n[lang].form.normal, i18n[lang].form.high], required: true },
-  ];
-  const usedFields = Array.isArray(fields) && fields.length ? fields : defaultFields;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -440,14 +457,14 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                     <textarea
                       required={!!f.required}
                       rows={5}
-                      value={values[f.name] ?? ""}
+                      value={values[f.name] ?? f.defaultValue ?? ""}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
                       className={cx("w-full rounded-md border px-3 py-2", dark ? "bg-[#0f172a] border-[#1f2a44] text-slate-100" : "bg-white border-slate-300")}
                     />
                   ) : f.type === "select" ? (
                     <select
                       required={!!f.required}
-                      value={values[f.name] ?? (f.options?.[0] ?? "")}
+                      value={values[f.name] ?? f.defaultValue ?? (f.options?.[0] ?? "")}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
                       className={cx("w-full rounded-md border px-3 py-2", dark ? "bg-[#0f172a] border-[#1f2a44] text-slate-100" : "bg-white border-slate-300")}
                     >
@@ -459,16 +476,16 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={!!values[f.name]}
+                        checked={values[f.name] ?? f.defaultValue ?? false}
                         onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.checked }))}
                       />
-                      <span className="text-sm opacity-80">{values[f.name] ? "Yes" : "No"}</span>
+                      <span className="text-sm opacity-80">{(values[f.name] ?? f.defaultValue ?? false) ? "Yes" : "No"}</span>
                     </div>
                   ) : (
                     <Input
                       type={f.type === "datetime" ? "datetime-local" : f.type}
                       required={!!f.required}
-                      value={values[f.name] ?? ""}
+                      value={values[f.name] ?? f.defaultValue ?? ""}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
                       className={cx(dark && "bg-[#0f172a] border-[#1f2a44] text-slate-100")}
                     />
