@@ -44,15 +44,34 @@ import { Separator } from "@/components/ui/separator";
 
 // ------- Brand -------
 const brand = {
-  blueStart: "#0B2F63",
-  blueEnd: "#0B4EA2",
+  blueStart: "#1d4ed8",
+  blueEnd: "#0b1120",
+  midnight: "#020617",
 };
 
-const surfaces = {
-  darkBackground: "radial-gradient(circle at 20% 20%, #1b3f82 0%, #101c36 35%, #070d1a 100%)",
-  darkShell: "linear-gradient(135deg, rgba(24,45,94,0.65) 0%, rgba(11,22,45,0.92) 55%, rgba(7,13,26,0.96) 100%)",
-  lightBackground: "linear-gradient(180deg, #eff3ff 0%, #f9fbff 100%)",
-  lightShell: "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(230,239,255,0.9) 65%, rgba(220,232,255,0.9) 100%)",
+const darkTheme = {
+  baseGradient: "radial-gradient(circle at 16% 16%, #1d4ed8 0%, #0f172a 45%, #020617 100%)",
+  shellGradient: "linear-gradient(135deg, rgba(37,99,235,0.35) 0%, rgba(15,23,42,0.94) 55%, rgba(2,6,23,0.98) 100%)",
+  panel: "bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl",
+  panelHover: "hover:border-blue-400/70 hover:shadow-[0_24px_60px_rgba(2,6,23,0.55)]",
+  iconWrap: "bg-slate-900/60 border border-slate-800/60",
+  icon: "text-sky-300",
+  textMuted: "text-slate-300",
+  chipSolid: "border border-slate-700/70 bg-slate-900/60 text-slate-100 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]",
+  chipOutline: "border border-slate-700/70 bg-slate-950/40 text-slate-100",
+  quickButton: "border border-slate-800/70 !bg-slate-900/70 text-slate-100 hover:!bg-slate-900/80 hover:border-blue-400/60",
+  outlineButton: "border border-slate-700 text-slate-100 hover:!bg-slate-800/60 hover:!text-slate-100",
+  ctaButton: "!bg-blue-500 !text-white hover:!bg-blue-400",
+  input: "border-slate-700 bg-slate-950/70 text-slate-100 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:ring-blue-400",
+  modal: "border border-slate-800 bg-slate-950/85 text-slate-100 backdrop-blur-xl",
+  utilityButton: "border border-slate-800 !bg-slate-900/70 !text-slate-200 hover:!bg-slate-900/50",
+  searchButton: "!bg-blue-500/90 !text-white hover:!bg-blue-400",
+  navItem: "text-slate-300 hover:bg-slate-900/60 hover:text-white",
+  navItemActive: "bg-slate-900/80 text-white shadow-[0_0_0_1px_rgba(96,165,250,0.35)]",
+  urgentCard: "bg-slate-900/70 border border-slate-800/70 text-slate-100",
+  urgentButton: "!bg-blue-500 !text-white hover:!bg-blue-400",
+  divider: "bg-slate-800/60",
+  overlay: "bg-slate-950/80",
 };
 
 // ------- i18n -------
@@ -409,10 +428,15 @@ const NAV_ITEMS = [
 
 function SidebarItem({ label, icon: Icon, active = false, onClick }) {
   return (
-    <button onClick={onClick} className={cx(
-      "group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition hover:bg-white/10 hover:text-white",
-      active ? "bg-white/10 text-white" : "text-white/80"
-    )}>
+    <button
+      onClick={onClick}
+      className={cx(
+        "group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition",
+        active
+          ? "bg-white/15 text-white shadow-[0_12px_30px_rgba(15,23,42,0.45)]"
+          : "text-white/80 hover:bg-white/10 hover:text-white",
+      )}
+    >
       <Icon className="h-4 w-4" />
       <span>{label}</span>
     </button>
@@ -435,18 +459,18 @@ function CategoryCard({
       <Card className={cx(
         "relative overflow-hidden rounded-2xl border shadow-sm transition",
         dark
-          ? "bg-[#15294b] border-[#223763] hover:border-[#4c6ce8] hover:shadow-xl"
+          ? cx(darkTheme.panel, darkTheme.panelHover)
           : "bg-white border-slate-200/60 hover:shadow-md"
       )}>
-        <div className={cx("pointer-events-none absolute inset-0 bg-gradient-to-b", accent, dark && "opacity-10")} />
+        <div className={cx("pointer-events-none absolute inset-0 bg-gradient-to-b", accent, dark && "opacity-20")} />
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
-            <div className={cx("grid h-10 w-10 place-items-center rounded-xl", dark ? "bg-white/10" : "bg-slate-100")}>
-              <Icon className={cx("h-5 w-5", dark ? "text-sky-200" : "text-slate-700")} />
+            <div className={cx("grid h-10 w-10 place-items-center rounded-xl", dark ? darkTheme.iconWrap : "bg-slate-100")}>
+              <Icon className={cx("h-5 w-5", dark ? darkTheme.icon : "text-slate-700")} />
             </div>
             <div>
               <CardTitle className={cx("text-base", dark && "text-slate-100")}>{title}</CardTitle>
-              <CardDescription className={cx("text-xs", dark ? "text-slate-200" : "text-slate-500")}>{description}</CardDescription>
+              <CardDescription className={cx("text-xs", dark ? darkTheme.textMuted : "text-slate-500")}>{description}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -454,19 +478,19 @@ function CategoryCard({
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Badge
               variant="secondary"
-              className={cx("rounded-full", dark && "bg-[#1f3766] text-slate-100")}
+              className={cx("rounded-full", dark && darkTheme.chipSolid)}
             >
               {labels?.request ?? 'Request'}
             </Badge>
             <Badge
               variant="outline"
-              className={cx("rounded-full", dark && "border-[#3459c8] bg-white/5 text-slate-100")}
+              className={cx("rounded-full", dark && darkTheme.chipOutline)}
             >
               {labels?.howto ?? 'How-to'}
             </Badge>
             <Badge
               variant="outline"
-              className={cx("rounded-full", dark && "border-[#3459c8] bg-white/5 text-slate-100")}
+              className={cx("rounded-full", dark && darkTheme.chipOutline)}
             >
               {labels?.troubleshoot ?? 'Troubleshoot'}
             </Badge>
@@ -484,14 +508,14 @@ function ActionCard({ label, description, dark, onOpen }) {
         className={cx(
           "rounded-2xl border shadow-sm transition",
           dark
-            ? "bg-[#15294b] border-[#223763] hover:border-[#4c6ce8] hover:shadow-xl"
+            ? cx(darkTheme.panel, darkTheme.panelHover)
             : "bg-white border-slate-200/60 hover:shadow-md",
         )}
       >
         <CardHeader className="pb-2">
           <CardTitle className={cx("text-sm", dark && "text-slate-100")}>{label}</CardTitle>
           {description && (
-            <CardDescription className={cx("text-xs", dark ? "text-slate-200" : "text-slate-500")}>{description}</CardDescription>
+            <CardDescription className={cx("text-xs", dark ? darkTheme.textMuted : "text-slate-500")}>{description}</CardDescription>
           )}
         </CardHeader>
         <CardContent className="pt-0">
@@ -500,7 +524,7 @@ function ActionCard({ label, description, dark, onOpen }) {
             variant="secondary"
             className={cx(
               "rounded-full",
-              dark && "bg-[#3b82f6] text-white hover:bg-[#5aa0ff]",
+              dark && darkTheme.ctaButton,
             )}
             onClick={onOpen}
           >
@@ -566,18 +590,25 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div
+      className={cx(
+        "fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm",
+        dark ? darkTheme.overlay : "bg-black/60",
+      )}
+      role="dialog"
+      aria-modal="true"
+    >
       <div
         className={cx(
-          "w-full max-w-xl rounded-2xl shadow-xl",
-          dark ? "border border-[#223763] bg-[#101f3f] text-slate-100" : "bg-white",
+          "w-full max-w-xl rounded-2xl shadow-xl transition",
+          dark ? darkTheme.modal : "bg-white",
         )}
       >
         <div className="flex items-center justify-between px-5 pt-5">
           <h3 className="text-lg font-semibold">{title}</h3>
           <button
             onClick={onClose}
-            className={cx("rounded p-1", dark ? "hover:bg-white/10" : "hover:bg-slate-200/40")}
+            className={cx("rounded p-1", dark ? "text-slate-400 hover:bg-slate-900/50" : "hover:bg-slate-200/40")}
           >
             <X className="h-5 w-5"/>
           </button>
@@ -597,7 +628,7 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                       className={cx(
                         "w-full rounded-md border px-3 py-2 focus-visible:outline-none focus-visible:ring-1",
                         dark
-                          ? "bg-[#111f3c] border-[#2a4173] text-slate-100 focus-visible:border-[#4c6ce8] focus-visible:ring-[#4c6ce8]"
+                          ? darkTheme.input
                           : "bg-white border-slate-300 focus-visible:border-blue-500 focus-visible:ring-blue-500",
                       )}
                     />
@@ -609,7 +640,7 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                       className={cx(
                         "w-full rounded-md border px-3 py-2 focus-visible:outline-none focus-visible:ring-1",
                         dark
-                          ? "bg-[#111f3c] border-[#2a4173] text-slate-100 focus-visible:border-[#4c6ce8] focus-visible:ring-[#4c6ce8]"
+                          ? darkTheme.input
                           : "bg-white border-slate-300 focus-visible:border-blue-500 focus-visible:ring-blue-500",
                       )}
                     >
@@ -632,9 +663,7 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                       required={!!f.required}
                       value={values[f.name] ?? f.defaultValue ?? ""}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                      className={cx(
-                        dark && "border-[#2a4173] bg-[#111f3c] text-slate-100 placeholder:text-slate-400 focus-visible:border-[#4c6ce8] focus-visible:ring-[#4c6ce8]",
-                      )}
+                      className={cx(dark ? darkTheme.input : "")}
                     />
                   )}
                 </div>
@@ -644,7 +673,7 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className={cx(dark && "border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]")}
+                  className={cx(dark && darkTheme.outlineButton)}
                 >
                   {i18n[lang].form.cancel}
                 </Button>
@@ -653,7 +682,7 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
             </form>
           ) : (
             <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-              <CheckCircle2 className="h-10 w-10" />
+              <CheckCircle2 className="h-10 w-10 text-blue-400" />
               <div className="text-base font-medium">{i18n[lang].form.thanks}</div>
               <div className="text-sm opacity-80">{i18n[lang].form.redirect}</div>
             </div>
@@ -771,26 +800,26 @@ export default function HelpdeskPortal() {
     const searchInputClasses = cx(
       "w-full rounded-xl border pl-9 text-sm transition focus-visible:outline-none focus-visible:ring-2",
       isDark
-        ? "border-white/20 bg-white/10 text-white placeholder:text-white/70 focus-visible:ring-white"
+        ? "border-slate-800 bg-slate-950/70 text-slate-100 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:ring-blue-400"
         : "border-slate-200 bg-white text-slate-900 placeholder:text-slate-500 focus-visible:border-blue-500 focus-visible:ring-blue-500",
     );
 
     const searchIconClass = cx(
       "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2",
-      isDark ? "text-white/80" : "text-slate-400",
+      isDark ? "text-slate-400" : "text-slate-400",
     );
 
     const searchButtonClasses = cx(
-      "rounded-xl px-5",
+      "rounded-xl px-5 font-semibold transition",
       isDark
-        ? "bg-white text-slate-900 hover:bg-white/90"
+        ? darkTheme.searchButton
         : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
     );
 
     const utilityButtonClasses = cx(
-      "rounded-xl px-4",
+      "rounded-xl px-4 transition",
       isDark
-        ? "bg-white text-slate-900 hover:bg-white/90"
+        ? darkTheme.utilityButton
         : "bg-slate-100 text-slate-900 hover:bg-slate-200",
     );
 
@@ -844,22 +873,28 @@ export default function HelpdeskPortal() {
     <div
       className={cx(
         "min-h-screen w-full flex flex-col transition-colors duration-300",
-        isDark ? "text-slate-100" : "bg-slate-100 text-slate-900",
+        isDark ? "bg-slate-950 text-slate-100" : "bg-slate-100 text-slate-900",
       )}
-      style={isDark ? { background: "radial-gradient(circle at 20% 20%, #1b3f82 0%, #101c36 35%, #070d1a 100%)" } : undefined}
+      style={isDark ? { background: darkTheme.baseGradient } : undefined}
     >
       {/* Shell */}
       <div
         className="w-full flex flex-1"
         style={
           isDark
-            ? { background: "linear-gradient(135deg, rgba(24,45,94,0.65) 0%, rgba(11,22,45,0.92) 55%, rgba(7,13,26,0.96) 100%)" }
+            ? { background: darkTheme.shellGradient }
             : undefined
         }
       >
         <div className="min-h-full w-full md:flex">
           {/* Sidebar */}
-          <aside className="relative hidden md:flex md:min-h-full flex-col gap-2" style={{ background: `linear-gradient(180deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)`, width: sidebarWidth }}>
+          <aside
+            className="relative hidden md:flex md:min-h-full flex-col gap-2"
+            style={{
+              background: `linear-gradient(195deg, rgba(37,99,235,0.55) 0%, rgba(17,35,71,0.82) 50%, ${brand.blueEnd} 100%)`,
+              width: sidebarWidth,
+            }}
+          >
             <div className="flex items-center gap-3 px-4 pt-5 text-white">
               <div className="grid h-9 w-9 place-items-center rounded-xl bg-white/10">
                 <LifeBuoy className="h-4 w-4" />
@@ -888,13 +923,13 @@ export default function HelpdeskPortal() {
                 className={cx(
                   "rounded-2xl border",
                   isDark
-                    ? "border-white/20 bg-white/10 text-white backdrop-blur"
+                    ? cx(darkTheme.urgentCard, "backdrop-blur-xl shadow-[0_18px_40px_rgba(2,6,23,0.45)]")
                     : "border-sky-100 bg-gradient-to-br from-[#e5edff] via-white to-white text-slate-900 shadow-sm",
                 )}
               >
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{t("needHelp")}</CardTitle>
-                  <CardDescription className={cx(isDark ? "text-white/80" : "text-slate-600")}>
+                  <CardDescription className={cx(isDark ? darkTheme.textMuted : "text-slate-600")}>
                     Open a high-priority ticket and we'll get right on it.
                   </CardDescription>
                 </CardHeader>
@@ -902,8 +937,8 @@ export default function HelpdeskPortal() {
                   <Button
                     variant="secondary"
                     className={cx(
-                      "w-full rounded-xl",
-                      isDark ? "bg-white text-slate-900 hover:bg-white/90" : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
+                      "w-full rounded-xl font-semibold transition",
+                      isDark ? darkTheme.urgentButton : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
                     )}
                     onClick={() => openForm(i18n[lang].urgent)}
                   >
@@ -920,11 +955,17 @@ export default function HelpdeskPortal() {
             <div
               className={cx(
                 "relative w-full border-b",
-                isDark ? "border-white/10" : "border-transparent bg-white/90 shadow-sm backdrop-blur",
+                isDark
+                  ? "border-slate-800/60 bg-slate-950/60 backdrop-blur"
+                  : "border-transparent bg-white/90 shadow-sm backdrop-blur",
               )}
-              style={isDark ? { background: `linear-gradient(90deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)` } : undefined}
+              style={
+                isDark
+                  ? { background: "linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(2,6,23,0.98) 100%)" }
+                  : undefined
+              }
             >
-              <div className={cx("flex w-full items-center justify-between gap-2 px-4 py-5", isDark ? "text-white" : "text-slate-900")}>
+              <div className={cx("flex w-full items-center justify-between gap-2 px-4 py-5", isDark ? "text-slate-100" : "text-slate-900")}>
                 <div className="hidden text-left md:block">
                   <div className="text-sm font-semibold tracking-wide">{t("welcome")}</div>
                   <div className="text-xs opacity-80">{t("subWelcome")}</div>
@@ -961,10 +1002,10 @@ export default function HelpdeskPortal() {
                       key={s.title}
                       variant="outline"
                       className={cx(
-                        "h-auto justify-start gap-3 rounded-2xl border py-3 text-left shadow-sm transition hover:bg-slate-50",
+                        "h-auto justify-start gap-3 rounded-2xl border py-3 text-left shadow-sm transition",
                         isDark
-                          ? "bg-[#162447] border-[#273d74] text-slate-100 hover:bg-[#1c2f59] hover:border-[#3b82f6]"
-                          : "bg-white border-slate-200 text-slate-900",
+                          ? darkTheme.quickButton
+                          : "bg-white border-slate-200 text-slate-900 hover:bg-slate-50",
                       )}
                       onClick={s.onClick}
                     >
@@ -1007,7 +1048,7 @@ export default function HelpdeskPortal() {
                 {tab === 'home' && selected && selectedCat && (
                   <motion.div key="detail" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" onClick={() => setSelected(null)} className={cx("rounded-xl", isDark && "border-[#1f2a44]")}> 
+                      <Button variant="outline" onClick={() => setSelected(null)} className={cx("rounded-xl", isDark && darkTheme.outlineButton)}>
                         <ArrowLeft className="mr-2 h-4 w-4" /> {t("back")}
                       </Button>
                     </div>
@@ -1040,10 +1081,10 @@ export default function HelpdeskPortal() {
                           />
                         ))
                       ) : (
-                        <Card className={cx("border-dashed", isDark ? "bg-[#15294b] border-[#223763]" : "")}>
+                        <Card className={cx("border-dashed", isDark ? "border-slate-700/70 bg-slate-900/60 text-slate-100" : "")}>
                           <CardHeader>
                             <CardTitle className="text-base">{t("noActions")}</CardTitle>
-                            <CardDescription>{t("tellUs")}</CardDescription>
+                            <CardDescription className={cx(isDark ? darkTheme.textMuted : undefined)}>{t("tellUs")}</CardDescription>
                           </CardHeader>
                           <CardContent>
                             <Button onClick={() => openForm(i18n[lang].openGeneral)}>{t("openGeneral")}</Button>
@@ -1066,18 +1107,18 @@ export default function HelpdeskPortal() {
                           key={id}
                           className={cx(
                             'rounded-2xl border transition',
-                            isDark ? 'bg-[#15294b] border-[#223763] hover:border-[#4c6ce8]' : 'bg-white border-slate-200',
+                            isDark ? cx(darkTheme.panel, 'hover:border-blue-400/60') : 'bg-white border-slate-200',
                           )}
                         >
                           <CardHeader className="pb-2">
                             <CardTitle className="text-sm">{id} - {(i%2?'In Progress':'New')}</CardTitle>
-                            <CardDescription>{['VPN not connecting','New monitor request','Printer offline','Add user to group'][i]}</CardDescription>
+                            <CardDescription className={cx(isDark ? darkTheme.textMuted : undefined)}>{['VPN not connecting','New monitor request','Printer offline','Add user to group'][i]}</CardDescription>
                           </CardHeader>
                           <CardContent className="pt-0">
                             <Button
                               size="sm"
                               variant="outline"
-                              className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                              className={cx(isDark && darkTheme.outlineButton)}
                               onClick={() => openForm(`Update ${id}`)}
                             >
                               Update
@@ -1101,18 +1142,18 @@ export default function HelpdeskPortal() {
                           key={u}
                           className={cx(
                             'rounded-2xl border transition',
-                            isDark ? 'bg-[#15294b] border-[#223763] hover:border-[#4c6ce8]' : 'bg-white border-slate-200',
+                            isDark ? cx(darkTheme.panel, 'hover:border-blue-400/60') : 'bg-white border-slate-200',
                           )}
                         >
                           <CardHeader className="pb-2">
                             <CardTitle className="text-sm">{u}</CardTitle>
-                            <CardDescription>Employee</CardDescription>
+                            <CardDescription className={cx(isDark ? darkTheme.textMuted : undefined)}>Employee</CardDescription>
                           </CardHeader>
                           <CardContent className="flex gap-2 pt-0">
                             <Button
                               size="sm"
                               variant="outline"
-                              className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                              className={cx(isDark && darkTheme.outlineButton)}
                               onClick={() => openForm(schemaKey('User Management','Reset Password'), FORM_SCHEMAS[schemaKey('User Management','Reset Password')])}
                             >
                               {lang==='de'?'Passwort zurücksetzen':'Reset Password'}
@@ -1120,7 +1161,7 @@ export default function HelpdeskPortal() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                              className={cx(isDark && darkTheme.outlineButton)}
                               onClick={() => openForm(schemaKey('User Management','Add to Group'), FORM_SCHEMAS[schemaKey('User Management','Add to Group')])}
                             >
                               {lang==='de'?'Zu Gruppe hinzufügen':'Add to Group'}
@@ -1138,28 +1179,28 @@ export default function HelpdeskPortal() {
                     <Card
                       className={cx(
                         'rounded-2xl border transition',
-                        isDark ? 'bg-[#15294b] border-[#223763] hover:border-[#4c6ce8]' : 'bg-white border-slate-200',
+                        isDark ? cx(darkTheme.panel, 'hover:border-blue-400/60') : 'bg-white border-slate-200',
                       )}
                     >
                       <CardHeader className="pb-2"><CardTitle className="text-sm">Preferences</CardTitle></CardHeader>
                       <CardContent className="flex flex-wrap items-center gap-2 pt-0">
                         <Button
                           variant="outline"
-                          className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                          className={cx(isDark && darkTheme.outlineButton)}
                           onClick={() => setLang(lang==='en'?'de':'en')}
                         >
                           {lang==='en'?'Switch to German':'Wechsel zu Englisch'}
                         </Button>
                         <Button
                           variant="outline"
-                          className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                          className={cx(isDark && darkTheme.outlineButton)}
                           onClick={() => setIsDark(v=>!v)}
                         >
                           {isDark?'Light Mode':'Dark Mode'}
                         </Button>
                         <Button
                           variant="outline"
-                          className={cx(isDark && 'border-[#3459c8] text-slate-100 hover:bg-[#1c2f59]')}
+                          className={cx(isDark && darkTheme.outlineButton)}
                           onClick={() => { localStorage.removeItem('portal-sidebar-width'); window.location.reload(); }}
                         >
                           Reset Sidebar Width
@@ -1175,7 +1216,14 @@ export default function HelpdeskPortal() {
       </div>
 
       {/* Footer */}
-      <footer className="mt-auto w-full" style={{ background: `linear-gradient(90deg, ${brand.blueStart} 0%, ${brand.blueEnd} 100%)` }}>
+      <footer
+        className="mt-auto w-full"
+        style={{
+          background: isDark
+            ? "linear-gradient(160deg, rgba(15,23,42,0.95) 0%, rgba(2,6,23,1) 65%, rgba(37,99,235,0.6) 100%)"
+            : `linear-gradient(90deg, ${brand.blueStart} 0%, #1e3a8a 100%)`,
+        }}
+      >
         <div className="mx-auto max-w-[1400px] px-6 py-8 text-white">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div>
