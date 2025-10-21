@@ -753,8 +753,18 @@ export default function HelpdeskPortal() {
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                       {selectedActions.length > 0 ? (
                         selectedActions.map((a) => (
-                          <ActionCard key={a.label} {...a} dark={isDark} onOpen={() => openForm(schemaKey(selectedCat.title, a.label), FORM_SCHEMAS[schemaKey(selectedCat.title, a.label)])} />
-                        ))}
+                          <ActionCard
+                            key={a.label}
+                            {...a}
+                            dark={isDark}
+                            onOpen={() =>
+                              openForm(
+                                schemaKey(selectedCat.title, a.label),
+                                FORM_SCHEMAS[schemaKey(selectedCat.title, a.label)],
+                              )
+                            }
+                          />
+                        ))
                       ) : (
                         <Card className={cx("border-dashed", isDark ? "bg-[#121826] border-[#1f2a44]" : "")}> 
                           <CardHeader>
