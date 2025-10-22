@@ -655,8 +655,14 @@ export default function HelpdeskPortal() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle("theme-dark", isDark);
-  }, [isDark]);
+    if (hasManualTheme) {
+      root.classList.toggle("theme-dark", isDark);
+      root.classList.toggle("theme-light", !isDark);
+    } else {
+      root.classList.remove("theme-light");
+      root.classList.toggle("theme-dark", isDark);
+    }
+  }, [isDark, hasManualTheme]);
 
   useEffect(() => {
     if (hasManualTheme) return;
