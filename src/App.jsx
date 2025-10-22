@@ -42,38 +42,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-// ------- Brand -------
-const brand = {
-  blueStart: "#1d4ed8",
-  blueEnd: "#0b1120",
-  midnight: "#020617",
-};
-
-const darkTheme = {
-  baseGradient: "radial-gradient(circle at 16% 16%, #1d4ed8 0%, #0f172a 45%, #020617 100%)",
-  shellGradient: "linear-gradient(135deg, rgba(37,99,235,0.35) 0%, rgba(15,23,42,0.94) 55%, rgba(2,6,23,0.98) 100%)",
-  panel: "bg-slate-900/70 border border-slate-800/60 backdrop-blur-xl",
-  panelHover: "hover:border-blue-400/70 hover:shadow-[0_24px_60px_rgba(2,6,23,0.55)]",
-  iconWrap: "bg-slate-900/60 border border-slate-800/60",
-  icon: "text-sky-300",
-  textMuted: "text-slate-300",
-  chipSolid: "border border-slate-700/70 bg-slate-900/60 text-slate-100 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]",
-  chipOutline: "border border-slate-700/70 bg-slate-950/40 text-slate-100",
-  quickButton: "border border-slate-800/70 !bg-slate-900/70 text-slate-100 hover:!bg-slate-900/80 hover:border-blue-400/60",
-  outlineButton: "border border-slate-700 text-slate-100 hover:!bg-slate-800/60 hover:!text-slate-100",
-  ctaButton: "!bg-blue-500 !text-white hover:!bg-blue-400",
-  input: "border-slate-700 bg-slate-950/70 text-slate-100 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:ring-blue-400",
-  modal: "border border-slate-800 bg-slate-950/85 text-slate-100 backdrop-blur-xl",
-  utilityButton: "border border-slate-800 !bg-slate-900/70 !text-slate-200 hover:!bg-slate-900/50",
-  searchButton: "!bg-blue-500/90 !text-white hover:!bg-blue-400",
-  navItem: "text-slate-300 hover:bg-slate-900/60 hover:text-white",
-  navItemActive: "bg-slate-900/80 text-white shadow-[0_0_0_1px_rgba(96,165,250,0.35)]",
-  urgentCard: "bg-slate-900/70 border border-slate-800/70 text-slate-100",
-  urgentButton: "!bg-blue-500 !text-white hover:!bg-blue-400",
-  divider: "bg-slate-800/60",
-  overlay: "bg-slate-950/80",
-};
-
 // ------- i18n -------
 const i18n = {
   en: {
@@ -429,13 +397,9 @@ const NAV_ITEMS = [
 function SidebarItem({ label, icon: Icon, active = false, onClick }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={cx(
-        "group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition",
-        active
-          ? "bg-white/15 text-white shadow-[0_12px_30px_rgba(15,23,42,0.45)]"
-          : "text-white/80 hover:bg-white/10 hover:text-white",
-      )}
+      className={cx("nav-item", active && "active")}
     >
       <Icon className="h-4 w-4" />
       <span>{label}</span>
@@ -448,50 +412,33 @@ function CategoryCard({
   description,
   icon: Icon,
   accent,
-  lightAccent,
-  lightIcon,
   onClick,
   labels,
-  dark,
 }) {
   return (
     <motion.button onClick={onClick} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="text-left">
-      <Card className={cx(
-        "relative overflow-hidden rounded-2xl border shadow-sm transition",
-        dark
-          ? cx(darkTheme.panel, darkTheme.panelHover)
-          : "bg-white border-slate-200/60 hover:shadow-md"
-      )}>
-        <div className={cx("pointer-events-none absolute inset-0 bg-gradient-to-b", accent, dark && "opacity-20")} />
+      <Card className="relative overflow-hidden panel-surface panel-hover">
+        <div className={cx("pointer-events-none absolute inset-0 bg-gradient-to-b opacity-20", accent)} />
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
-            <div className={cx("grid h-10 w-10 place-items-center rounded-xl", dark ? darkTheme.iconWrap : "bg-slate-100")}>
-              <Icon className={cx("h-5 w-5", dark ? darkTheme.icon : "text-slate-700")} />
+            <div className="icon-wrap">
+              <Icon className="icon-accent" />
             </div>
             <div>
-              <CardTitle className={cx("text-base", dark && "text-slate-100")}>{title}</CardTitle>
-              <CardDescription className={cx("text-xs", dark ? darkTheme.textMuted : "text-slate-500")}>{description}</CardDescription>
+              <CardTitle className="text-base">{title}</CardTitle>
+              <CardDescription className="text-muted text-xs">{description}</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="relative z-10 pt-0">
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Badge
-              variant="secondary"
-              className={cx("rounded-full", dark && darkTheme.chipSolid)}
-            >
+            <Badge variant="secondary" className="chip-solid rounded-full">
               {labels?.request ?? 'Request'}
             </Badge>
-            <Badge
-              variant="outline"
-              className={cx("rounded-full", dark && darkTheme.chipOutline)}
-            >
+            <Badge variant="outline" className="chip-outline rounded-full">
               {labels?.howto ?? 'How-to'}
             </Badge>
-            <Badge
-              variant="outline"
-              className={cx("rounded-full", dark && darkTheme.chipOutline)}
-            >
+            <Badge variant="outline" className="chip-outline rounded-full">
               {labels?.troubleshoot ?? 'Troubleshoot'}
             </Badge>
           </div>
@@ -501,31 +448,21 @@ function CategoryCard({
   );
 }
 
-function ActionCard({ label, description, dark, onOpen }) {
+function ActionCard({ label, description, onOpen }) {
   return (
     <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
-      <Card
-        className={cx(
-          "rounded-2xl border shadow-sm transition",
-          dark
-            ? cx(darkTheme.panel, darkTheme.panelHover)
-            : "bg-white border-slate-200/60 hover:shadow-md",
-        )}
-      >
+      <Card className="panel-surface panel-hover">
         <CardHeader className="pb-2">
-          <CardTitle className={cx("text-sm", dark && "text-slate-100")}>{label}</CardTitle>
+          <CardTitle className="text-sm">{label}</CardTitle>
           {description && (
-            <CardDescription className={cx("text-xs", dark ? darkTheme.textMuted : "text-slate-500")}>{description}</CardDescription>
+            <CardDescription className="text-muted text-xs">{description}</CardDescription>
           )}
         </CardHeader>
         <CardContent className="pt-0">
           <Button
             size="sm"
             variant="secondary"
-            className={cx(
-              "rounded-full",
-              dark && darkTheme.ctaButton,
-            )}
+            className="rounded-full btn-primary"
             onClick={onOpen}
           >
             Open
@@ -537,7 +474,7 @@ function ActionCard({ label, description, dark, onOpen }) {
 }
 
 // ------- Simple Modal with Form -------
-function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
+function FormModal({ open, onClose, onSubmit, title, lang, fields }) {
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [values, setValues] = useState({});
@@ -590,30 +527,15 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
   };
 
   return (
-    <div
-      className={cx(
-        "fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm",
-        dark ? darkTheme.overlay : "bg-black/60",
-      )}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className={cx(
-          "w-full max-w-xl rounded-2xl shadow-xl transition",
-          dark ? darkTheme.modal : "bg-white",
-        )}
-      >
-        <div className="flex items-center justify-between px-5 pt-5">
+    <div className="dialog-overlay" role="dialog" aria-modal="true">
+      <div className="dialog-surface">
+        <div className="dialog-header flex items-center justify-between">
           <h3 className="text-lg font-semibold">{title}</h3>
-          <button
-            onClick={onClose}
-            className={cx("rounded p-1", dark ? "text-slate-400 hover:bg-slate-900/50" : "hover:bg-slate-200/40")}
-          >
-            <X className="h-5 w-5"/>
+          <button onClick={onClose} className="btn btn-ghost btn-sm" type="button">
+            <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="px-5 pb-5">
+        <div className="dialog-body">
           {!done ? (
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
               {usedFields.map((f) => (
@@ -625,24 +547,14 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                       rows={5}
                       value={values[f.name] ?? f.defaultValue ?? ""}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                      className={cx(
-                        "w-full rounded-md border px-3 py-2 focus-visible:outline-none focus-visible:ring-1",
-                        dark
-                          ? darkTheme.input
-                          : "bg-white border-slate-300 focus-visible:border-blue-500 focus-visible:ring-blue-500",
-                      )}
+                      className="form-control"
                     />
                   ) : f.type === "select" ? (
                     <select
                       required={!!f.required}
                       value={values[f.name] ?? f.defaultValue ?? (f.options?.[0] ?? "")}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                      className={cx(
-                        "w-full rounded-md border px-3 py-2 focus-visible:outline-none focus-visible:ring-1",
-                        dark
-                          ? darkTheme.input
-                          : "bg-white border-slate-300 focus-visible:border-blue-500 focus-visible:ring-blue-500",
-                      )}
+                      className="form-control"
                     >
                       {(f.options || []).map((o) => (
                         <option key={o} value={o}>{o}</option>
@@ -655,7 +567,7 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                         checked={values[f.name] ?? f.defaultValue ?? false}
                         onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.checked }))}
                       />
-                      <span className="text-sm opacity-80">{(values[f.name] ?? f.defaultValue ?? false) ? "Yes" : "No"}</span>
+                      <span className="text-sm text-muted">{(values[f.name] ?? f.defaultValue ?? false) ? "Yes" : "No"}</span>
                     </div>
                   ) : (
                     <Input
@@ -663,17 +575,15 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
                       required={!!f.required}
                       value={values[f.name] ?? f.defaultValue ?? ""}
                       onChange={(e) => setValues((v) => ({ ...v, [f.name]: e.target.value }))}
-                      className={cx(dark ? darkTheme.input : "")}
                     />
                   )}
                 </div>
               ))}
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="dialog-footer">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className={cx(dark && darkTheme.outlineButton)}
                 >
                   {i18n[lang].form.cancel}
                 </Button>
@@ -684,7 +594,7 @@ function FormModal({ open, onClose, onSubmit, title, lang, dark, fields }) {
             <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
               <CheckCircle2 className="h-10 w-10 text-blue-400" />
               <div className="text-base font-medium">{i18n[lang].form.thanks}</div>
-              <div className="text-sm opacity-80">{i18n[lang].form.redirect}</div>
+              <div className="text-sm text-muted">{i18n[lang].form.redirect}</div>
             </div>
           )}
         </div>
@@ -725,12 +635,43 @@ export default function HelpdeskPortal() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
   const [lang, setLang] = useState(getStoredLang);
-  const [isDark, setIsDark] = useState(() => readStorage("portal-theme") === "dark");
   const [tab, setTab] = useState(getStoredTab);
+  const [hasManualTheme, setHasManualTheme] = useState(() => {
+    const stored = readStorage("portal-theme");
+    return stored === "dark" || stored === "light";
+  });
+  const [isDark, setIsDark] = useState(() => {
+    const stored = readStorage("portal-theme");
+    if (stored === "dark") return true;
+    if (stored === "light") return false;
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false;
+  });
 
-  useEffect(() => { writeStorage("portal-theme", isDark ? "dark" : "light"); }, [isDark]);
   useEffect(() => { writeStorage("portal-lang", lang); }, [lang]);
   useEffect(() => { writeStorage("portal-tab", tab); }, [tab]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("theme-dark", isDark);
+  }, [isDark]);
+
+  useEffect(() => {
+    if (hasManualTheme) return;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const listener = (event) => setIsDark(event.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [hasManualTheme]);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setHasManualTheme(true);
+    setIsDark(next);
+    writeStorage("portal-theme", next ? "dark" : "light");
+  };
 
   // Form state
   const [formOpen, setFormOpen] = useState(false);
@@ -752,76 +693,13 @@ export default function HelpdeskPortal() {
 
     const t = (key) => i18n[lang][key];
 
-    const quickActions = [
-      {
-        title: i18n[lang].quick.myTickets,
-        icon: Ticket,
-        onClick: () => setTab("tickets"),
-        accent: "from-[#e5edff] via-white to-white",
-        iconClass: "bg-[#dbe7ff] text-[#1f4ed8]",
-      },
-      {
-        title: i18n[lang].quick.catalog,
-        icon: Boxes,
-        onClick: () => {},
-        accent: "from-[#e9f7ff] via-white to-white",
-        iconClass: "bg-[#d1f0ff] text-[#0284c7]",
-      },
-      {
-        title: i18n[lang].quick.kb,
-        icon: BookOpen,
-        onClick: () => setTab("knowledge"),
-        accent: "from-[#f1e9ff] via-white to-white",
-        iconClass: "bg-[#e3d6ff] text-[#6b21a8]",
-      },
-      {
-        title: i18n[lang].quick.forms,
-        icon: FileText,
-        onClick: () => openForm(i18n[lang].quick.forms),
-        accent: "from-[#ffe9f2] via-white to-white",
-        iconClass: "bg-[#ffd6e6] text-[#c0265b]",
-      },
-      {
-        title: i18n[lang].quick.contacts,
-        icon: Users,
-        onClick: () => setTab("users"),
-        accent: "from-[#fff1e6] via-white to-white",
-        iconClass: "bg-[#ffe3cc] text-[#c2410c]",
-      },
-      {
-        title: i18n[lang].quick.status,
-        icon: AlertTriangle,
-        onClick: () => setTab("systems"),
-        accent: "from-[#fff4e6] via-white to-white",
-        iconClass: "bg-[#ffe8cc] text-[#b45309]",
-      },
-    ];
+    const searchInputClasses = cx("search-input", "pl-9");
 
-    const searchInputClasses = cx(
-      "w-full rounded-xl border pl-9 text-sm transition focus-visible:outline-none focus-visible:ring-2",
-      isDark
-        ? "border-slate-800 bg-slate-950/70 text-slate-100 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:ring-blue-400"
-        : "border-slate-200 bg-white text-slate-900 placeholder:text-slate-500 focus-visible:border-blue-500 focus-visible:ring-blue-500",
-    );
+    const searchIconClass = "search-icon";
 
-    const searchIconClass = cx(
-      "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2",
-      isDark ? "text-slate-400" : "text-slate-400",
-    );
+    const searchButtonClasses = "search-button";
 
-    const searchButtonClasses = cx(
-      "rounded-xl px-5 font-semibold transition",
-      isDark
-        ? darkTheme.searchButton
-        : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
-    );
-
-    const utilityButtonClasses = cx(
-      "rounded-xl px-4 transition",
-      isDark
-        ? darkTheme.utilityButton
-        : "bg-slate-100 text-slate-900 hover:bg-slate-200",
-    );
+    const utilityButtonClasses = "utility-button";
 
     const filtered = useMemo(() => {
       const q = query.trim().toLowerCase();
@@ -870,42 +748,26 @@ export default function HelpdeskPortal() {
   }
 
   return (
-    <div
-      className={cx(
-        "min-h-screen w-full flex flex-col transition-colors duration-300",
-        isDark ? "bg-slate-950 text-slate-100" : "bg-slate-100 text-slate-900",
-      )}
-      style={isDark ? { background: darkTheme.baseGradient } : undefined}
-    >
+    <div className="app-shell min-h-screen w-full flex flex-col">
       {/* Shell */}
-      <div
-        className="w-full flex flex-1"
-        style={
-          isDark
-            ? { background: darkTheme.shellGradient }
-            : undefined
-        }
-      >
+      <div className="portal-shell w-full flex flex-1">
         <div className="min-h-full w-full md:flex">
           {/* Sidebar */}
           <aside
-            className="relative hidden md:flex md:min-h-full flex-col gap-2"
-            style={{
-              background: `linear-gradient(195deg, rgba(37,99,235,0.55) 0%, rgba(17,35,71,0.82) 50%, ${brand.blueEnd} 100%)`,
-              width: sidebarWidth,
-            }}
+            className="sidebar relative hidden md:flex md:min-h-full flex-col gap-2"
+            style={{ width: sidebarWidth }}
           >
-            <div className="flex items-center gap-3 px-4 pt-5 text-white">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-white/10">
+            <div className="flex items-center gap-3 px-4 pt-5">
+              <div className="icon-wrap h-9 w-9">
                 <LifeBuoy className="h-4 w-4" />
               </div>
               <div>
                 <div className="text-sm font-semibold tracking-wide">IT Helpdesk</div>
-                <div className="text-xs opacity-80">Service Portal</div>
+                <div className="text-xs text-muted">Service Portal</div>
               </div>
             </div>
-            <Separator className="my-4 bg-white/20" />
-            <nav className="flex flex-1 flex-col gap-1 px-2">
+            <Separator className="my-4" />
+            <nav className="nav-list flex-1 px-2">
               {NAV_ITEMS.map((item) => (
                 <SidebarItem
                   key={item.key}
@@ -917,29 +779,21 @@ export default function HelpdeskPortal() {
               ))}
             </nav>
             {/* resize handle */}
-            <div onMouseDown={() => setIsResizing(true)} title="Drag to resize" className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize bg-white/10 hover:bg-white/20" />
+            <div onMouseDown={() => setIsResizing(true)} title="Drag to resize" className="sidebar-resize-handle absolute right-0 top-0 h-full w-1.5 cursor-col-resize" />
             <div className="mt-auto p-4">
               <Card
-                className={cx(
-                  "rounded-2xl border",
-                  isDark
-                    ? cx(darkTheme.urgentCard, "backdrop-blur-xl shadow-[0_18px_40px_rgba(2,6,23,0.45)]")
-                    : "border-sky-100 bg-gradient-to-br from-[#e5edff] via-white to-white text-slate-900 shadow-sm",
-                )}
+                className="urgent-card panel-hover"
               >
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">{t("needHelp")}</CardTitle>
-                  <CardDescription className={cx(isDark ? darkTheme.textMuted : "text-slate-600")}>
+                  <CardDescription className="text-muted">
                     Open a high-priority ticket and we'll get right on it.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button
-                    variant="secondary"
-                    className={cx(
-                      "w-full rounded-xl font-semibold transition",
-                      isDark ? darkTheme.urgentButton : "bg-[#1d4ed8] text-white hover:bg-[#1a3faa]",
-                    )}
+                    variant="primary"
+                    className="urgent-button w-full"
                     onClick={() => openForm(i18n[lang].urgent)}
                   >
                     <AlertTriangle className="mr-2 h-4 w-4" /> {t("urgent")}
@@ -952,34 +806,22 @@ export default function HelpdeskPortal() {
           {/* Main */}
           <main className="flex min-h-full flex-col flex-1">
             {/* Topbar */}
-            <div
-              className={cx(
-                "relative w-full border-b",
-                isDark
-                  ? "border-slate-800/60 bg-slate-950/60 backdrop-blur"
-                  : "border-transparent bg-white/90 shadow-sm backdrop-blur",
-              )}
-              style={
-                isDark
-                  ? { background: "linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(2,6,23,0.98) 100%)" }
-                  : undefined
-              }
-            >
-              <div className={cx("flex w-full items-center justify-between gap-2 px-4 py-5", isDark ? "text-slate-100" : "text-slate-900")}>
+            <div className="header w-full">
+              <div className="flex w-full items-center justify-between gap-2 px-4 py-5">
                 <div className="hidden text-left md:block">
                   <div className="text-sm font-semibold tracking-wide">{t("welcome")}</div>
-                  <div className="text-xs opacity-80">{t("subWelcome")}</div>
+                  <div className="text-xs text-muted">{t("subWelcome")}</div>
                 </div>
-                <div className="flex w-full max-w-3xl items-center gap-2 md:ml-auto">
-                  <div className="relative w-full">
+                <div className="search-bar w-full max-w-3xl md:ml-auto">
+                  <div className="search-input-wrapper w-full">
                     <Search className={searchIconClass} />
                     <Input className={searchInputClasses} placeholder={t("searchPh")} value={query} onChange={(e) => setQuery(e.target.value)} />
                   </div>
-                  <Button variant="secondary" className={searchButtonClasses}>{lang === 'de' ? 'Suchen' : 'Search'}</Button>
+                  <Button variant="primary" className={searchButtonClasses}>{lang === 'de' ? 'Suchen' : 'Search'}</Button>
                   <Button variant="secondary" className={utilityButtonClasses} onClick={() => setLang(lang === 'en' ? 'de' : 'en')} title={lang === 'en' ? 'Switch to German' : 'Wechsel zu Englisch'}>
                     <Globe className="mr-2 h-4 w-4" /> {lang.toUpperCase()}
                   </Button>
-                  <Button variant="secondary" className={utilityButtonClasses} onClick={() => setIsDark(v => !v)} title="Toggle theme">
+                  <Button variant="secondary" className={utilityButtonClasses} onClick={toggleTheme} title="Toggle theme">
                     {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -1000,13 +842,8 @@ export default function HelpdeskPortal() {
                   ].map((s) => (
                     <Button
                       key={s.title}
-                      variant="outline"
-                      className={cx(
-                        "h-auto justify-start gap-3 rounded-2xl border py-3 text-left shadow-sm transition",
-                        isDark
-                          ? darkTheme.quickButton
-                          : "bg-white border-slate-200 text-slate-900 hover:bg-slate-50",
-                      )}
+                      variant="secondary"
+                      className="quick-button h-auto justify-start gap-3 rounded-2xl py-3 text-left"
                       onClick={s.onClick}
                     >
                       <s.icon className="h-4 w-4" />
@@ -1020,7 +857,7 @@ export default function HelpdeskPortal() {
                 {tab === 'home' && !selected && (
                   <div>
                     <h2 className="text-xl font-semibold tracking-tight">{t("browseBy")}</h2>
-                    <p className="text-sm opacity-80">{t("browseHelp")}</p>
+                    <p className="text-sm text-muted">{t("browseHelp")}</p>
                   </div>
                 )}
               </div>
@@ -1039,7 +876,6 @@ export default function HelpdeskPortal() {
                         lightIcon={c.lightIcon}
                         onClick={() => setSelected(c.title)}
                         labels={i18n[lang].chips}
-                        dark={isDark}
                       />
                     ))}
                   </motion.div>
@@ -1048,7 +884,7 @@ export default function HelpdeskPortal() {
                 {tab === 'home' && selected && selectedCat && (
                   <motion.div key="detail" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" onClick={() => setSelected(null)} className={cx("rounded-xl", isDark && darkTheme.outlineButton)}>
+                      <Button variant="secondary" onClick={() => setSelected(null)} className="rounded-xl">
                         <ArrowLeft className="mr-2 h-4 w-4" /> {t("back")}
                       </Button>
                     </div>
@@ -1062,7 +898,6 @@ export default function HelpdeskPortal() {
                       lightIcon={selectedCat.lightIcon}
                       onClick={() => {}}
                       labels={i18n[lang].chips}
-                      dark={isDark}
                     />
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -1071,7 +906,6 @@ export default function HelpdeskPortal() {
                           <ActionCard
                             key={a.label}
                             {...a}
-                            dark={isDark}
                             onOpen={() =>
                               openForm(
                                 schemaKey(selectedCat.title, a.label),
@@ -1081,10 +915,10 @@ export default function HelpdeskPortal() {
                           />
                         ))
                       ) : (
-                        <Card className={cx("border-dashed", isDark ? "border-slate-700/70 bg-slate-900/60 text-slate-100" : "")}>
+                        <Card className="panel-surface panel-hover border-dashed">
                           <CardHeader>
                             <CardTitle className="text-base">{t("noActions")}</CardTitle>
-                            <CardDescription className={cx(isDark ? darkTheme.textMuted : undefined)}>{t("tellUs")}</CardDescription>
+                            <CardDescription className="text-muted">{t("tellUs")}</CardDescription>
                           </CardHeader>
                           <CardContent>
                             <Button onClick={() => openForm(i18n[lang].openGeneral)}>{t("openGeneral")}</Button>
@@ -1105,20 +939,16 @@ export default function HelpdeskPortal() {
                       {['INC-1021','SR-559','INC-1017','SR-553'].map((id,i)=> (
                         <Card
                           key={id}
-                          className={cx(
-                            'rounded-2xl border transition',
-                            isDark ? cx(darkTheme.panel, 'hover:border-blue-400/60') : 'bg-white border-slate-200',
-                          )}
+                          className="panel-surface panel-hover"
                         >
                           <CardHeader className="pb-2">
                             <CardTitle className="text-sm">{id} - {(i%2?'In Progress':'New')}</CardTitle>
-                            <CardDescription className={cx(isDark ? darkTheme.textMuted : undefined)}>{['VPN not connecting','New monitor request','Printer offline','Add user to group'][i]}</CardDescription>
+                            <CardDescription className="text-muted">{['VPN not connecting','New monitor request','Printer offline','Add user to group'][i]}</CardDescription>
                           </CardHeader>
                           <CardContent className="pt-0">
                             <Button
                               size="sm"
-                              variant="outline"
-                              className={cx(isDark && darkTheme.outlineButton)}
+                              variant="secondary"
                               onClick={() => openForm(`Update ${id}`)}
                             >
                               Update
@@ -1140,28 +970,23 @@ export default function HelpdeskPortal() {
                       {['alex.meyer','li.na','sam.otto','maria.fernandez'].map((u)=> (
                         <Card
                           key={u}
-                          className={cx(
-                            'rounded-2xl border transition',
-                            isDark ? cx(darkTheme.panel, 'hover:border-blue-400/60') : 'bg-white border-slate-200',
-                          )}
+                          className="panel-surface panel-hover"
                         >
                           <CardHeader className="pb-2">
                             <CardTitle className="text-sm">{u}</CardTitle>
-                            <CardDescription className={cx(isDark ? darkTheme.textMuted : undefined)}>Employee</CardDescription>
+                            <CardDescription className="text-muted">Employee</CardDescription>
                           </CardHeader>
                           <CardContent className="flex gap-2 pt-0">
                             <Button
                               size="sm"
-                              variant="outline"
-                              className={cx(isDark && darkTheme.outlineButton)}
+                              variant="secondary"
                               onClick={() => openForm(schemaKey('User Management','Reset Password'), FORM_SCHEMAS[schemaKey('User Management','Reset Password')])}
                             >
                               {lang==='de'?'Passwort zurücksetzen':'Reset Password'}
                             </Button>
                             <Button
                               size="sm"
-                              variant="outline"
-                              className={cx(isDark && darkTheme.outlineButton)}
+                              variant="secondary"
                               onClick={() => openForm(schemaKey('User Management','Add to Group'), FORM_SCHEMAS[schemaKey('User Management','Add to Group')])}
                             >
                               {lang==='de'?'Zu Gruppe hinzufügen':'Add to Group'}
@@ -1176,31 +1001,23 @@ export default function HelpdeskPortal() {
                 {tab === 'settings' && (
                   <motion.div key="settings" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
                     <h2 className="text-xl font-semibold">Settings</h2>
-                    <Card
-                      className={cx(
-                        'rounded-2xl border transition',
-                        isDark ? cx(darkTheme.panel, 'hover:border-blue-400/60') : 'bg-white border-slate-200',
-                      )}
-                    >
+                    <Card className="panel-surface panel-hover">
                       <CardHeader className="pb-2"><CardTitle className="text-sm">Preferences</CardTitle></CardHeader>
                       <CardContent className="flex flex-wrap items-center gap-2 pt-0">
                         <Button
-                          variant="outline"
-                          className={cx(isDark && darkTheme.outlineButton)}
+                          variant="secondary"
                           onClick={() => setLang(lang==='en'?'de':'en')}
                         >
                           {lang==='en'?'Switch to German':'Wechsel zu Englisch'}
                         </Button>
                         <Button
-                          variant="outline"
-                          className={cx(isDark && darkTheme.outlineButton)}
-                          onClick={() => setIsDark(v=>!v)}
+                          variant="secondary"
+                          onClick={toggleTheme}
                         >
                           {isDark?'Light Mode':'Dark Mode'}
                         </Button>
                         <Button
-                          variant="outline"
-                          className={cx(isDark && darkTheme.outlineButton)}
+                          variant="secondary"
                           onClick={() => { localStorage.removeItem('portal-sidebar-width'); window.location.reload(); }}
                         >
                           Reset Sidebar Width
@@ -1216,19 +1033,12 @@ export default function HelpdeskPortal() {
       </div>
 
       {/* Footer */}
-      <footer
-        className="mt-auto w-full"
-        style={{
-          background: isDark
-            ? "linear-gradient(160deg, rgba(15,23,42,0.95) 0%, rgba(2,6,23,1) 65%, rgba(37,99,235,0.6) 100%)"
-            : `linear-gradient(90deg, ${brand.blueStart} 0%, #1e3a8a 100%)`,
-        }}
-      >
-        <div className="mx-auto max-w-[1400px] px-6 py-8 text-white">
+      <footer className="footer mt-auto w-full">
+        <div className="mx-auto max-w-[1400px] px-6 py-8">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div>
               <h3 className="text-sm font-semibold">{i18n[lang].footer.help}</h3>
-              <ul className="mt-3 space-y-2 text-sm text-white/90">
+              <ul className="mt-3 space-y-2 text-sm text-muted">
                 <li>{i18n[lang].footer.openTicket}</li>
                 <li>{t("urgent")}</li>
                 <li>{i18n[lang].footer.contact}</li>
@@ -1236,7 +1046,7 @@ export default function HelpdeskPortal() {
             </div>
             <div>
               <h3 className="text-sm font-semibold">{i18n[lang].footer.resources}</h3>
-              <ul className="mt-3 space-y-2 text-sm text-white/90">
+              <ul className="mt-3 space-y-2 text-sm text-muted">
                 <li>{i18n[lang].quick.kb}</li>
                 <li>{i18n[lang].quick.catalog}</li>
                 <li>{i18n[lang].quick.forms}</li>
@@ -1244,19 +1054,19 @@ export default function HelpdeskPortal() {
             </div>
             <div>
               <h3 className="text-sm font-semibold">{i18n[lang].footer.status}</h3>
-              <ul className="mt-3 space-y-2 text-sm text-white/90">
+              <ul className="mt-3 space-y-2 text-sm text-muted">
                 <li>{i18n[lang].footer.sysStatus}</li>
                 <li>{i18n[lang].footer.planned}</li>
                 <li>{i18n[lang].footer.sla}</li>
               </ul>
             </div>
           </div>
-          <div className="mt-6 border-t border-white/20 pt-4 text-xs text-white/80">© {new Date().getFullYear()} IT Service Portal · All rights reserved</div>
+          <div className="footer-meta">© {new Date().getFullYear()} IT Service Portal · All rights reserved</div>
         </div>
       </footer>
 
       {/* Form Modal */}
-      <FormModal open={formOpen} onClose={() => setFormOpen(false)} onSubmit={afterSubmit} title={`${i18n[lang].form.title}: ${formTitle}`} lang={lang} dark={isDark} fields={formFields} />
+      <FormModal open={formOpen} onClose={() => setFormOpen(false)} onSubmit={afterSubmit} title={`${i18n[lang].form.title}: ${formTitle}`} lang={lang} fields={formFields} />
     </div>
   );
 }
