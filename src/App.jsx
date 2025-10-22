@@ -61,6 +61,18 @@ const i18n = {
     back: "Back to categories",
     needHelp: "Need help fast?",
     urgent: "Urgent Request",
+    incidentsTitle: "Current Incidents",
+    incidentsDescription: "We're aware of the following service disruptions:",
+    incidents: [
+      {
+        title: "Microsoft login issues",
+        detail: "Users may experience problems signing in. We're investigating.",
+      },
+      {
+        title: "Personio offline",
+        detail: "The HR portal is currently unavailable.",
+      },
+    ],
     noActions: "No predefined actions",
     tellUs: "Tell us what you need and we'll help.",
     openGeneral: "Open a General Request",
@@ -122,6 +134,18 @@ const i18n = {
     back: "Zurück zu den Kategorien",
     needHelp: "Brauchen Sie schnell Hilfe?",
     urgent: "Dringende Anfrage",
+    incidentsTitle: "Aktuelle Störungen",
+    incidentsDescription: "Wir arbeiten derzeit an folgenden Problemen:",
+    incidents: [
+      {
+        title: "Microsoft Login macht Probleme",
+        detail: "Anmeldungen schlagen teilweise fehl. Wir analysieren die Ursache.",
+      },
+      {
+        title: "Personio offline",
+        detail: "Das HR-Portal ist momentan nicht erreichbar.",
+      },
+    ],
     noActions: "Keine vordefinierten Aktionen",
     tellUs: "Beschreiben Sie Ihr Anliegen – wir helfen.",
     openGeneral: "Allgemeine Anfrage öffnen",
@@ -711,14 +735,15 @@ export default function HelpdeskPortal() {
       const q = query.trim().toLowerCase();
       const cats = CATS.map((c) => ({
         ...c,
-      description: (i18n[lang].categories?.[c.title]?.d ?? ""),
-    }));
-    if (!q) return cats;
-    return cats.filter((c) => [c.title, c.description].join(" ").toLowerCase().includes(q));
-  }, [query, lang]);
+        description: (i18n[lang].categories?.[c.title]?.d ?? ""),
+      }));
+      if (!q) return cats;
+      return cats.filter((c) => [c.title, c.description].join(" ").toLowerCase().includes(q));
+    }, [query, lang]);
 
-  const selectedCat = CATS.find((c) => c.title === selected);
-  const selectedActions = selected ? ACTIONS[selected] ?? [] : [];
+    const selectedCat = CATS.find((c) => c.title === selected);
+    const selectedActions = selected ? ACTIONS[selected] ?? [] : [];
+    const incidents = i18n[lang].incidents ?? [];
 
   // resizable sidebar
   const [sidebarWidth, setSidebarWidth] = useState(() => {
@@ -837,25 +862,56 @@ export default function HelpdeskPortal() {
             {/* Content */}
             <div className="w-full flex-1 px-4 py-6">
               {tab === 'home' && !selected && (
-                <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    { title: i18n[lang].quick.myTickets, icon: Ticket, onClick: () => setTab('tickets') },
-                    { title: i18n[lang].quick.catalog, icon: Boxes, onClick: () => {} },
-                    { title: i18n[lang].quick.kb, icon: BookOpen, onClick: () => setTab('knowledge') },
-                    { title: i18n[lang].quick.forms, icon: FileText, onClick: () => openForm(i18n[lang].quick.forms) },
-                    { title: i18n[lang].quick.contacts, icon: Users, onClick: () => setTab('users') },
-                    { title: i18n[lang].quick.status, icon: AlertTriangle, onClick: () => setTab('systems') },
-                  ].map((s) => (
-                    <Button
-                      key={s.title}
-                      variant="secondary"
-                      className="quick-button h-auto justify-start gap-3 rounded-2xl py-3 text-left"
-                      onClick={s.onClick}
-                    >
-                      <s.icon className="h-4 w-4" />
-                      <span className="text-sm font-medium">{s.title}</span>
-                    </Button>
-                  ))}
+                <div className="mb-6 space-y-4">
+                  {incidents.length > 0 && (
+                    <Card className="panel-surface panel-hover border border-amber-200/70 bg-amber-50/80 text-left dark:border-amber-500/40 dark:bg-amber-500/10">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 text-amber-500" />
+                          <CardTitle className="text-base">{i18n[lang].incidentsTitle}</CardTitle>
+                        </div>
+                        <CardDescription className="text-muted">
+                          {i18n[lang].incidentsDescription}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <ul className="space-y-3">
+                          {incidents.map((incident) => (
+                            <li key={incident.title} className="flex items-start gap-3 text-sm">
+                              <span className="mt-1.5 h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
+                              <div>
+                                <div className="font-medium">{incident.title}</div>
+                                {incident.detail && (
+                                  <div className="text-muted">{incident.detail}</div>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {[
+                      { title: i18n[lang].quick.myTickets, icon: Ticket, onClick: () => setTab('tickets') },
+                      { title: i18n[lang].quick.catalog, icon: Boxes, onClick: () => {} },
+                      { title: i18n[lang].quick.kb, icon: BookOpen, onClick: () => setTab('knowledge') },
+                      { title: i18n[lang].quick.forms, icon: FileText, onClick: () => openForm(i18n[lang].quick.forms) },
+                      { title: i18n[lang].quick.contacts, icon: Users, onClick: () => setTab('users') },
+                      { title: i18n[lang].quick.status, icon: AlertTriangle, onClick: () => setTab('systems') },
+                    ].map((s) => (
+                      <Button
+                        key={s.title}
+                        variant="secondary"
+                        className="quick-button h-auto justify-start gap-3 rounded-2xl py-3 text-left"
+                        onClick={s.onClick}
+                      >
+                        <s.icon className="h-4 w-4" />
+                        <span className="text-sm font-medium">{s.title}</span>
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               )}
 
