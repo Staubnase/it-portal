@@ -120,9 +120,23 @@ body {
 }
 
 .app-shell {
-  background: radial-gradient(circle at 16% 16%, rgba(59, 130, 246, 0.2) 0%, rgba(15, 23, 42, 0.85) 55%, rgba(11, 18, 32, 1) 100%);
+  background: radial-gradient(
+    circle at 16% 16%,
+    rgba(148, 193, 255, 0.55) 0%,
+    rgba(228, 238, 255, 0.85) 40%,
+    rgba(245, 249, 255, 1) 100%
+  );
   background-color: var(--color-bg);
   color: var(--color-text);
+}
+
+.theme-light .app-shell {
+  background: radial-gradient(
+    circle at 18% 20%,
+    rgba(148, 193, 255, 0.6) 0%,
+    rgba(223, 237, 255, 0.9) 45%,
+    rgba(248, 250, 252, 1) 100%
+  );
 }
 
 .theme-dark .app-shell {
@@ -130,15 +144,25 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-  .app-shell {
+  :root:not(.theme-light) .app-shell {
     background: radial-gradient(circle at 18% 20%, rgba(59, 130, 246, 0.45) 0%, rgba(15, 23, 42, 0.92) 55%, rgba(11, 18, 32, 1) 100%);
   }
 }
 
 .portal-shell {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(17, 23, 42, 0.65) 50%, rgba(11, 18, 32, 0.85) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(228, 238, 255, 0.9) 55%, rgba(216, 231, 255, 0.95) 100%);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
+}
+
+.theme-dark .portal-shell {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(17, 23, 42, 0.65) 50%, rgba(11, 18, 32, 0.85) 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) .portal-shell {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(17, 23, 42, 0.65) 50%, rgba(11, 18, 32, 0.85) 100%);
+  }
 }
 
 .sidebar {
@@ -570,10 +594,20 @@ body {
 }
 
 .footer {
-  background: linear-gradient(180deg, rgba(11, 18, 32, 0.95), rgba(11, 18, 32, 1));
+  background: linear-gradient(180deg, rgba(241, 245, 249, 0.95), rgba(248, 250, 252, 1));
   border-top: 1px solid var(--color-border);
   padding: 2rem 1.5rem;
   color: var(--color-text);
+}
+
+.theme-dark .footer {
+  background: linear-gradient(180deg, rgba(11, 18, 32, 0.95), rgba(11, 18, 32, 1));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) .footer {
+    background: linear-gradient(180deg, rgba(11, 18, 32, 0.95), rgba(11, 18, 32, 1));
+  }
 }
 
 .footer a {
